@@ -1,0 +1,37 @@
+{{ define "main" }}
+
+<section class="relative min-h-screen bg-center bg-cover bg-no-repeat"
+  style='background-image: url({{ "images/mural.jpeg" | relURL }});'>
+
+  <!-- Overlay hitam -->
+  <div class="absolute inset-0 bg-black bg-opacity-60"></div>
+
+  <!-- Konten -->
+  <div class="relative z-10">
+    <h1 class="container px-6 pt-10 mx-auto mb-6 text-4xl font-bold text-center text-white drop-shadow-lg">
+      {{ .Title }}
+    </h1>
+
+    {{ $type := .Type }}
+    {{ $paginator := .Paginate .Pages.ByDate.Reverse 12 }}
+
+    <div class="container grid grid-cols-1 gap-6 p-6 mx-auto md:grid-cols-2 lg:grid-cols-2 lg:gap-10 text-black">
+      {{ range $paginator.Pages }}
+      {{ if eq $type "kegiatan" }}
+      {{ partial "kegiatan.html" . }}
+      {{ else if eq $type "page" }}
+      {{ partial "blog-card-2.html" . }}
+      {{ else if eq $type "gallery" }}
+      {{ partial "gallery.html" . }}
+      {{ else }}
+      {{ partial "blog-card.html" . }}
+      {{ end }}
+      {{ end }}
+    </div>
+
+    <div class="pb-10">
+      {{ partial "pagination.html" . }}
+    </div>
+  </div>
+</section>
+{{ end }}

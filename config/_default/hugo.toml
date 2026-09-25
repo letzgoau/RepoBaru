@@ -1,0 +1,109 @@
+metaDataFormat = "yaml"
+theme = "blist"
+title = "Biro Organisasi Sekretariat Daerah Kalimantan Barat"
+defaultContentLanguage = "id"
+defaultContentLanguageInSubdir = false
+contentDir = "content" #English
+timeout = "10m"
+
+[params]
+domain = "biroorganisasi.kalbarprov.go.id"
+phone = "+62 851-8680-8794"
+email = "organisasi@kalbarprov.go.id"
+address = "W9Q2+CV4, Jl. Ahmad Yani, Bansir Darat, Kec. Pontianak Tenggara, Kota Pontianak, Kalimantan Barat 78112"
+copyright = "Copyright © 2025"
+analytics = "<!-- Google tag (gtag.js) --><script async src='https://www.googletagmanager.com/gtag/js?id=G-1ERGHNCYH4'></script><script>window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'G-1ERGHNCYH4');</script>"
+darkModeToggle = true
+ascentColor = "bg-defaultColor"
+frontBundle = "jenis-layanan"
+frontBundle2 = "link-terkait"
+hideMeta = false
+hideOtherLanguages = false
+introTitle = "Biro Organisasi Sekretariat Daerah Kalimantan Barat"
+introSubtitle = "Website resmi Biro Organisasi Sekretariat Daerah Kalimantan Barat"
+mapTitle = "Lokasi Kami"
+mapEmbed = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3989.6910048773647!2d109.3496401!3d-0.0614926!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e1d59928335ea63%3A0x53473ee786966a61!2sBiro%20Organisasi%20Sekretariat%20Daerah%20Provinsi%20Kalimantan%20Barat!5e0!3m2!1sid!2sid!4v1726739820000!5m2!1sid!2sid"
+nama_kepala_biro = "Dini Eka Wahyuni, S.STP., M.T"
+no_image = "images/no-image-icon-6.png"
+sambutan_biro1 = "Selamat datang di website resmi Biro Organisasi Kami berkomitmen untuk menghadirkan layanan yang transparan, inovatif, dan responsif demi kesejahteraan masyarakat."
+sambutan_biro2 = "Website ini merupakan sarana informasi dan pelayanan publik yang dirancang untuk memudahkan akses masyarakat terhadap berbagai layanan pemerintah."
+sambutan_biro3 = "Kami terus berupaya meningkatkan keterbukaan informasi, efektivitas pelayanan, serta partisipasi masyarakat dalam pembangunan daerah."
+youtube_bg_id = "vowews0v0_o"
+
+
+[languages]
+
+[languages.id]
+languageName = "Bahasa Indonesia"
+weight = 1
+
+[languages.id.params]
+language-code = "id-ID"
+languageDirection = "ltr"
+introTitle = "Biro Organisasi Sekretariat Daerah Kalimantan Barat"
+introSubtitle = "Website resmi Biro Organisasi Sekretariat Daerah Kalimantan Barat"
+#Social Media links
+
+[[params.homepage.social.icons]]
+website = "youtube"
+url = "https://www.youtube.com/channel/UC-76UTZl0LnA-Qlr4NZRRyg"
+
+[[params.homepage.social.icons]]
+website = "instagram"
+url = "https://www.instagram.com/biroorganisasi_kalbar?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==r"
+
+[[params.homepage.social.icons]]
+website = "facebook"
+url = "https://www.facebook.com/BiroOrganisasiKalbar"
+
+[[params.homepage.social.icons]]
+website = "whatsapp"
+url = "https://wa.me/6285186808794"
+
+[[params.homepage.social.icons]]
+website = "gmapsEmbed"
+url = "<iframe src=\"https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2454.5602165479786!2d109.35180188613062!3d-0.06168351917015981!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e1d59928335ea63%3A0x53473ee786966a61!2sBiro%20Organisasi%20Sekretariat%20Daerah%20Provinsi%20Kalimantan%20Barat!5e1!3m2!1sid!2sid!4v1753749893014!5m2!1sid!2sid\" width=\"600\" height=\"450\" style=\"border:0;\" allowfullscreen=\"\" loading=\"lazy\" referrerpolicy=\"no-referrer-when-downgrade\"></iframe>"
+
+[[params.homepage.social.icons]]
+website = "youtubeEmbed"
+url = "<iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/vowews0v0_o?si=vhs79eH6YJjfNC9R\" title=\"YouTube video player\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>"
+
+
+
+
+
+
+
+[markup]
+
+[markup.highlight]
+style = "dracula"
+
+[markup.goldmark.renderer]
+unsafe = true
+
+[[params.running_text]]
+text = "SELAMAT DATANG DI WEB BIRO ORGANISASI #kompak BerAKHLAK #bangga melayani bangsa"
+
+[[params.sliders.images]]
+url = "UV19f3ybidgg0OHOfeKlTZAqOJJW0f8jnFEartbU.jpg"
+extension = "jpg"
+
+[[params.sliders.images]]
+url = "g5txyQXgcjCtS0VwuXlkrHt9onuc7kDDKSP4Ciz9.jpg"
+extension = "jpg"
+
+[[params.sliders.images]]
+url = "szj7z6v922muV7rkwolFQDEqXEzsvMkOL8Up0eNq.svg"
+extension = "svg"
+
+[[params.agenda]]
+tanggal = "2026-05-06"
+title = "Rapat Koordinasi Mingguan"
+waktu_mulai = "08:00"
+waktu_selesai = "10:00"
+tempat = "Ruang Rapat Utama"
+
+
+[outputs]
+  home = ["HTML", "JSON"]

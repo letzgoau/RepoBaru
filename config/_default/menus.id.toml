@@ -1,0 +1,76 @@
+[[main]]
+identifier = "tentang kami"
+name = "Tentang Kami"
+parent = ""
+url = "/tentang-kami"
+weight = 1
+
+[[main]]
+identifier = "profil"
+name = "Profil"
+parent = ""
+url = "/profil pimpinan"
+weight = 2
+
+[[main]]
+identifier = "berita"
+name = "Berita"
+parent = ""
+url = "/berita"
+weight = 3
+
+[[main]]
+identifier = "layanan"
+name = "Layanan"
+parent = ""
+url = "/jenis layanan"
+weight = 4
+
+[[main]]
+identifier = "publikasi"
+name = "Publikasi"
+parent = ""
+url = "#"
+weight = 5
+
+[[main]]
+identifier = "ppid"
+name = "PPID"
+parent = ""
+url = "#"
+weight = 6
+
+[[main]]
+identifier = "faq"
+name = "FAQ"
+parent = ""
+url = "/faq"
+weight = 7
+
+[[main]]
+identifier = "profil-ppid"
+name = "Profil PPID"
+parent = "ppid"
+url = "/profil ppid"
+weight = 1
+
+[[main]]
+identifier = "tata-cara"
+name = "Tata Cara"
+parent = "ppid"
+url = "/tata cara"
+weight = 2
+
+[[main]]
+identifier = "data-dan-dokumen"
+name = "Data dan Dokumen"
+parent = "publikasi"
+url = "/data dan dokumen"
+weight = 1
+
+[[main]]
+identifier = "laporan"
+name = "Laporan"
+parent = "publikasi"
+url = "/laporan"
+weight = 2

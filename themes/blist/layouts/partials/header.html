@@ -1,0 +1,404 @@
+<!-- Full header.html with integrated global search bar next to dark mode button -->
+<link href="/pagefind/pagefind-ui.css" rel="stylesheet">
+<header id="main-header"
+class="flex flex-wrap justify-between items-center mx-auto z-50 w-full transition-colors duration-300 {{ if .IsHome }}header-home{{ else }}header-solid{{ end }}">
+ <div class="flex flex-row justify-between w-full">
+    <a href='{{ absURL "/" }}' class="flex items-center flex-initial text-xl font-extrabold capitalize break-words text-pretty">
+      {{ if .Site.Params.logo }}
+      <img src='{{ absURL "/" }}kalbar-logo.png' alt="{{ .Site.Title }}" class="mx-5 my-2" style="width: 48px;" />
+      {{ else }}
+      <img src='{{ absURL "/" }}kalbar-logo.png' alt="{{ .Site.Title }}" class="mx-5 my-0" style="width: 48px;" />
+      {{ end }}
+      <span class="mr-12 font-bold text-white break-words hover:text-green-900 dark:hover:text-yellow-400 text-pretty " style="font-size: 20px;">{{ .Site.Title }}</span>
+    </a>
+
+    <button id="mobile-menu-button" class="flex-initial text-white mobile-menu-button md:hidden hover:text-green-900 dark:hover:text-yellow-400">
+      <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+        <line x1="4" y1="8" x2="20" y2="8" />
+        <line x1="4" y1="16" x2="20" y2="16" />
+      </svg>
+    </button>
+
+    {{ $accent := .Site.Params.ascentColor }}
+<ul id="mobile-menu" class='absolute z-10 flex flex-col flex-auto hidden w-full gap-1 pb-3 my-auto mr-8 text-base font-semibold tracking-wide text-gray-100 md:hidden md:p-0 md:w-auto md:relative mobile-menu place-self-end place-content-end top-full text-pretty md:items-center lg:gap-8 dark:bg-gray-900'
+  style="background:#38b6ff;">
+      <li class="my-1"><a href='{{ absURL "/" }}'>Beranda</a></li>
+      {{ range .Site.Menus.main }}
+        {{ $menuURL := .URL }}
+        {{ $menuName := .Name }}
+        {{ $menuHasChildren := .HasChildren }}
+        {{ if $menuHasChildren }}
+        <li class="relative px-4 my-1 cursor-pointer md:px-1">
+          <span class="flex items-center gap-2 language-switcher">
+            <a>{{ $menuName }}</a>
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+              <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+              <path d="M18 15l-6 -6l-6 6h12" transform="rotate(180 12 12)"></path>
+            </svg>
+          </span>
+          <div class='language-dropdown w-screen md:w-52 absolute top-3/4 mt-2 flex-col gap-4 md:gap-2 {{ default "bg-defaultColor" $accent }} dark:bg-gray-900 z-10 hidden' style="right: 5px; border-radius: 8px; border-color: blue; border-style: solid; border-width:1px">
+            {{ range .Children }}
+              <a class="px-5 py-4 md:py-2" href="{{ .URL }}">{{ .Name }}</a>
+            {{ end }}
+          </div>
+        </li>
+        {{ else }}
+          <li class="px-4 my-1 md:px-1"><a href="{{ $menuURL }}">{{ $menuName }}</a></li>
+        {{ end }}
+      {{ end }}
+      <!-- Language Switch -->
+      {{ if hugo.IsMultilingual }}
+      {{ if ge (len .Site.Languages) 3 }}
+        <li class="relative my-1 cursor-pointer">
+          <span class="flex items-center gap-2 language-switcher">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+              <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+              <circle cx="12" cy="12" r="9" />
+              <line x1="3.6" y1="9" x2="20.4" y2="9" />
+              <line x1="3.6" y1="15" x2="20.4" y2="15" />
+              <path d="M11.5 3a17 17 0 0 0 0 18" />
+              <path d="M12.5 3a17 17 0 0 1 0 18" />
+            </svg>
+            <a>{{ i18n "languageSwitcherLabel" }}</a>
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+              <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+              <path d="M18 15l-6 -6l-6 6h12" transform="rotate(180 12 12)" />
+            </svg>
+          </span>
+          <div class='language-dropdown absolute top-full mt-2 left-0 flex-col gap-2 {{ default "bg-blue-800" .Site.Params.ascentColor }} dark:bg-gray-900 dark:text-white z-10 hidden'>
+            {{ range .Site.Languages }}
+              {{ if not (eq .Lang $.Site.Language.Lang) }}
+                <a class="px-3 py-2 hover:bg-gray-200 dark:hover:bg-gray-700" href="/{{ .Lang }}" lang="{{ .Lang }}">{{ default .Lang .LanguageName }}</a>
+              {{ end }}
+            {{ end }}
+          </div>
+        </li>
+      {{ else }}
+        <li class="flex items-center my-1">
+          {{ range .Site.Languages }}
+            {{ if not (eq .Lang $.Site.Language.Lang) }}
+              <svg xmlns="http://www.w3.org/2000/svg" class="mr-2" width="16" height="16" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                <circle cx="12" cy="12" r="9" />
+                <line x1="3.6" y1="9" x2="20.4" y2="9" />
+                <line x1="3.6" y1="15" x2="20.4" y2="15" />
+                <path d="M11.5 3a17 17 0 0 0 0 18" />
+                <path d="M12.5 3a17 17 0 0 1 0 18" />
+              </svg>
+              <a href="/{{ .Lang }}" lang="{{ .Lang }}">{{ default .Lang .LanguageName }}</a>
+            {{ end }}
+          {{ end }}
+        </li>
+      {{ end }}
+      {{ end }}
+
+      {{ $accent := .Site.Params.ascentColor }}
+      <li class="grid place-items-center my-1">
+        <button onclick="openModal(document.getElementById('searchModal'))" 
+          class="flex items-center justify-center w-10 h-10 transition rounded-full hover:bg-blue-100 dark:hover:bg-gray-800">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-white" fill="none"
+            viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+            <circle cx="11" cy="11" r="7"/>
+            <line x1="16.5" y1="16.5" x2="21" y2="21"/>
+          </svg>
+        </button>
+      </li>
+
+      <!-- DARK MODE -->
+      {{ if .Site.Params.darkModeToggle }}
+      <li class="grid place-items-center my-1">
+        <button id="darkModeToggle1" class="relative flex items-center justify-center w-10 h-10 overflow-hidden bg-transparent rounded-full group">
+          <span id="ripple" class="absolute w-0 h-0 rounded-full opacity-0 bg-blue-400/30 dark:bg-yellow-300/30"></span>
+          <svg id="iconSun" xmlns="http://www.w3.org/2000/svg" class="absolute w-6 h-6 text-white transition-all duration-700 rotate-0 opacity-100" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+            <circle cx="12" cy="12" r="3" />
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 5v.01M17 7l.01.01M19 12h.01M17 17l.01.01M12 19v.01M7 17l.01.01M5 12h.01M7 7l.01.01" />
+          </svg>
+          <svg id="iconMoon" xmlns="http://www.w3.org/2000/svg" class="absolute w-6 h-6 text-blue-400 transition-all duration-700 rotate-90 opacity-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 0 0 9.79 9.79z" />
+          </svg>
+        </button>
+      </li>
+      {{ end }}
+</ul>
+<ul id="web-menu" 
+  class='absolute z-10 flex-col flex-auto hidden w-full gap-6 pb-6 my-auto mr-8 text-xl font-semibold tracking-wide text-gray-100 md:flex md:p-0 md:w-auto md:relative md:flex-row mobile-menu place-self-end place-content-end top-full text-pretty md:items-center lg:gap-8 dark:bg-gray-900'
+  style="background:transparent;">
+      <li class="my-4"><a href='{{ absURL "/" }}'>Beranda</a></li>
+
+      {{ range .Site.Menus.main }}
+        {{ $menuURL := .URL }}
+        {{ $menuName := .Name }}
+        {{ $menuHasChildren := .HasChildren }}
+        {{ if $menuHasChildren }}
+        <li class="relative px-4 my-4 cursor-pointer md:px-1">
+          <span class="flex items-center gap-2 language-switcher">
+            <a>{{ $menuName }}</a>
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+              <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+              <path d="M18 15l-6 -6l-6 6h12" transform="rotate(180 12 12)"></path>
+            </svg>
+          </span>
+          <div class='language-dropdown w-screen md:w-52 absolute top-3/4 mt-2 flex-col gap-4 md:gap-2 {{ default "bg-defaultColor" $accent }} dark:bg-gray-900 z-10 hidden' style="right: 5px; border-radius: 8px; border-color: blue; border-style: solid; border-width:1px">
+            {{ range .Children }}
+              <a class="px-5 py-4 md:py-2" href="{{ .URL }}">{{ .Name }}</a>
+            {{ end }}
+          </div>
+        </li>
+        {{ else }}
+          <li class="px-4 my-4 md:px-1"><a href="{{ $menuURL }}">{{ $menuName }}</a></li>
+        {{ end }}
+      {{ end }}
+
+      <!-- Language Switch -->
+      {{ if hugo.IsMultilingual }}
+      {{ if ge (len .Site.Languages) 3 }}
+        <li class="relative my-2 cursor-pointer">
+          <span class="flex items-center gap-2 language-switcher">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+              <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+              <circle cx="12" cy="12" r="9" />
+              <line x1="3.6" y1="9" x2="20.4" y2="9" />
+              <line x1="3.6" y1="15" x2="20.4" y2="15" />
+              <path d="M11.5 3a17 17 0 0 0 0 18" />
+              <path d="M12.5 3a17 17 0 0 1 0 18" />
+            </svg>
+            <a>{{ i18n "languageSwitcherLabel" }}</a>
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+              <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+              <path d="M18 15l-6 -6l-6 6h12" transform="rotate(180 12 12)" />
+            </svg>
+          </span>
+          <div class='language-dropdown absolute top-full mt-2 left-0 flex-col gap-2 {{ default "bg-blue-800" .Site.Params.ascentColor }} dark:bg-gray-900 dark:text-white z-10 hidden'>
+            {{ range .Site.Languages }}
+              {{ if not (eq .Lang $.Site.Language.Lang) }}
+                <a class="px-3 py-2 hover:bg-gray-200 dark:hover:bg-gray-700" href="/{{ .Lang }}" lang="{{ .Lang }}">{{ default .Lang .LanguageName }}</a>
+              {{ end }}
+            {{ end }}
+          </div>
+        </li>
+      {{ else }}
+        <li class="flex items-center my-2">
+          {{ range .Site.Languages }}
+            {{ if not (eq .Lang $.Site.Language.Lang) }}
+              <svg xmlns="http://www.w3.org/2000/svg" class="mr-2" width="16" height="16" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                <circle cx="12" cy="12" r="9" />
+                <line x1="3.6" y1="9" x2="20.4" y2="9" />
+                <line x1="3.6" y1="15" x2="20.4" y2="15" />
+                <path d="M11.5 3a17 17 0 0 0 0 18" />
+                <path d="M12.5 3a17 17 0 0 1 0 18" />
+              </svg>
+              <a href="/{{ .Lang }}" lang="{{ .Lang }}">{{ default .Lang .LanguageName }}</a>
+            {{ end }}
+          {{ end }}
+        </li>
+      {{ end }}
+      {{ end }}
+
+      {{ $accent := .Site.Params.ascentColor }}
+<li class="grid place-items-center">
+  
+  <button onclick="openModal(document.getElementById('searchModal'))" 
+    class="flex items-center justify-center w-10 h-10 transition rounded-full hover:bg-blue-100 dark:hover:bg-gray-800">
+    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-white" fill="none"
+      viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+      <circle cx="11" cy="11" r="7"/>
+      <line x1="16.5" y1="16.5" x2="21" y2="21"/>
+    </svg>
+  </button>
+</li>
+
+
+<!-- DARK MODE -->
+{{ if .Site.Params.darkModeToggle }}
+<li class="grid place-items-center">
+  <button id="darkModeToggle2" class="relative flex items-center justify-center w-10 h-10 overflow-hidden bg-transparent rounded-full group">
+    <span id="ripple" class="absolute w-0 h-0 rounded-full opacity-0 bg-blue-400/30 dark:bg-yellow-300/30"></span>
+    <svg id="iconSun" xmlns="http://www.w3.org/2000/svg" class="absolute w-6 h-6 text-white transition-all duration-700 rotate-0 opacity-100" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+      <circle cx="12" cy="12" r="3" />
+      <path stroke-linecap="round" stroke-linejoin="round" d="M12 5v.01M17 7l.01.01M19 12h.01M17 17l.01.01M12 19v.01M7 17l.01.01M5 12h.01M7 7l.01.01" />
+    </svg>
+    <svg id="iconMoon" xmlns="http://www.w3.org/2000/svg" class="absolute w-6 h-6 text-blue-400 transition-all duration-700 rotate-90 opacity-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 0 0 9.79 9.79z" />
+    </svg>
+  </button>
+</li>
+{{ end }}
+
+
+</ul>
+</div>
+<div id="searchModal" class="fixed inset-0 z-50 flex items-start justify-center hidden p-4 pt-16 sm:pt-20 bg-black/60 backdrop-blur-sm overflow-y-auto">
+  <div class="w-full max-w-2xl p-4 sm:p-6 bg-white border border-gray-300 shadow-2xl dark:bg-gray-800 rounded-xl dark:border-gray-700 transition-all duration-300 animate-in fade-in zoom-in-95" 
+    onclick="event.stopPropagation()"
+    role="dialog"
+    aria-labelledby="searchTitle"
+    aria-modal="true">
+    
+    <!-- HEADER -->
+    <div class="flex items-center justify-between mb-4 pb-4 border-b border-gray-200 dark:border-gray-700">
+      <h3 id="searchTitle" class="text-lg sm:text-xl font-bold text-gray-900 dark:text-white">
+        🔍 Cari di Website
+      </h3>
+      <button 
+        onclick="closeModal(document.getElementById('searchModal'))" 
+        aria-label="Tutup pencarian"
+        class="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 transition-colors rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+
+    <!-- SEARCH ENGINE -->
+    <div id="search" class="pagefind-ui-custom"></div>
+  </div>
+</div>
+
+<!-- SCROLL EFFECT -->
+<script src="/pagefind/pagefind-ui.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  new PagefindUI({ element: "#search", showSubResults: true });
+  const btn = document.getElementById("mobile-menu-button");
+  const webmenu = document.getElementById("web-menu");
+  
+  if (btn) {
+    btn.addEventListener("click", () => {
+      const mobilemenu = document.getElementById("mobile-menu");
+      console.log(mobilemenu);
+      if (mobilemenu) {
+        mobilemenu.classList.toggle("hidden");
+      }
+    });
+  }
+});
+
+function openModal(id){ 
+  id.classList.remove("hidden");
+  id.classList.add("flex");
+  const mobilemenu = document.getElementById("mobile-menu");
+  if(mobilemenu){
+    mobilemenu.classList.add("hidden");
+  }
+}
+function closeModal(id){ 
+  id.classList.add("hidden"); 
+}
+
+/* DARK MODE */
+const toggle1 = document.getElementById('darkModeToggle1');
+const toggle2 = document.getElementById('darkModeToggle2');
+const html = document.documentElement;
+const iconSun = document.getElementById('iconSun');
+const iconMoon = document.getElementById('iconMoon');
+const ripple = document.getElementById('ripple');
+
+if (localStorage.theme === 'dark' ||
+   (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+  html.classList.add('dark');
+  iconSun.style.opacity = 0;
+  iconSun.style.transform = 'rotate(90deg)';
+  iconMoon.style.opacity = 1;
+  iconMoon.style.transform = 'rotate(0deg)';
+}
+
+toggle1?.addEventListener('click', (e) => {
+  const isDark = html.classList.toggle('dark');
+  localStorage.theme = isDark ? 'dark' : 'light';
+
+  const rect = toggle.getBoundingClientRect();
+  const size = Math.max(rect.width, rect.height) * 3;
+  ripple.style.width = ripple.style.height = `${size}px`;
+  ripple.style.left = `${e.offsetX - size / 2}px`;
+  ripple.style.top = `${e.offsetY - size / 2}px`;
+  ripple.style.opacity = 1;
+  ripple.style.transition = 'all 0.6s ease-out';
+  ripple.style.transform = 'scale(1)';
+  ripple.style.opacity = 0;
+
+  setTimeout(() => {
+    ripple.style.width = ripple.style.height = '0';
+  }, 600);
+
+  if (isDark) {
+    iconSun.style.opacity = 0;
+    iconSun.style.transform = 'rotate(90deg)';
+    iconMoon.style.opacity = 1;
+    iconMoon.style.transform = 'rotate(0deg)';
+  } else {
+    iconSun.style.opacity = 1;
+    iconSun.style.transform = 'rotate(0deg)';
+    iconMoon.style.opacity = 0;
+    iconMoon.style.transform = 'rotate(-90deg)';
+  }
+});
+toggle2?.addEventListener('click', (e) => {
+  const isDark = html.classList.toggle('dark');
+  localStorage.theme = isDark ? 'dark' : 'light';
+
+  const rect = toggle.getBoundingClientRect();
+  const size = Math.max(rect.width, rect.height) * 3;
+  ripple.style.width = ripple.style.height = `${size}px`;
+  ripple.style.left = `${e.offsetX - size / 2}px`;
+  ripple.style.top = `${e.offsetY - size / 2}px`;
+  ripple.style.opacity = 1;
+  ripple.style.transition = 'all 0.6s ease-out';
+  ripple.style.transform = 'scale(1)';
+  ripple.style.opacity = 0;
+
+  setTimeout(() => {
+    ripple.style.width = ripple.style.height = '0';
+  }, 600);
+
+  if (isDark) {
+    iconSun.style.opacity = 0;
+    iconSun.style.transform = 'rotate(90deg)';
+    iconMoon.style.opacity = 1;
+    iconMoon.style.transform = 'rotate(0deg)';
+  } else {
+    iconSun.style.opacity = 1;
+    iconSun.style.transform = 'rotate(0deg)';
+    iconMoon.style.opacity = 0;
+    iconMoon.style.transform = 'rotate(-90deg)';
+  }
+});
+
+/* SCROLL HEADER EFFECT */
+document.addEventListener("scroll", () => {
+  const header = document.getElementById("main-header");
+  if(header.classList.contains("header-home")){
+    if(window.scrollY>50){ header.classList.add("scrolled"); } 
+    else{ header.classList.remove("scrolled"); }
+  }
+});
+
+
+// Tutup modal jika klik area overlay
+document.getElementById("searchModal").addEventListener("click", function (e) {
+  if (e.target === this) closeModal(this);
+});
+
+</script>
+
+
+<style>
+.header-home { position:absolute; top:0; left:0; right:0; background:transparent!important; }
+.header-home.scrolled { position:fixed; background:#38b6ff!important; box-shadow:0 2px 8px rgba(0,0,0,.15);}
+.dark .header-home.scrolled { background:#030a05!important; }
+.header-solid { position:sticky; top:0; background:#38b6ff!important; box-shadow:0 2px 8px rgba(0,0,0,.15);}
+.dark .header-solid { background:#030a05!important; }
+.language-dropdown { background:rgba(0,0,0,0.7); backdrop-filter:blur(6px); border-radius:8px;}
+
+#searchModal {
+  animation: fadeIn .2s ease-out;
+}
+@keyframes fadeIn {
+  from { opacity:0; }
+  to { opacity:1; }
+}
+</style>
+
+
+</header>

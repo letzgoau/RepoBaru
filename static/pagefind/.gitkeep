@@ -1,0 +1,2 @@
+# Keep the pagefind directory in source control.
+# Place Pagefind build outputs here: pagefind-ui.js, pagefind-ui.css, and generated index data.

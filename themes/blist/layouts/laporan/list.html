@@ -1,0 +1,399 @@
+{{ define "main" }}
+
+{{ $pages := sort .Pages "Date" "desc" }}
+{{ $paginator := .Paginate $pages (len $pages) }}
+
+<div 
+  class="relative min-h-screen bg-center bg-cover bg-no-repeat"
+  style="background-image: url('{{ "images/mural.jpeg" | relURL }}'); background-attachment: fixed;"
+>
+  <div class="absolute inset-0 bg-black bg-opacity-0 z-0"></div>
+  <div class="relative z-10 max-w-7xl mx-auto py-10 px-4 pt-16 md:pt-10">
+
+    <!-- ===== DESKTOP LAYOUT ===== -->
+    <div class="hidden md:grid md:grid-cols-4 gap-6">
+
+      <!-- SIDEBAR DESKTOP -->
+      <aside class="berita-sidebar md:h-max md:rounded-2xl md:overflow-hidden md:shadow-2xl md:sticky md:top-5">
+        <div class="relative px-6 py-5 text-center overflow-hidden berita-sidebar-header" style="background: linear-gradient(135deg, #0c2a4a 0%, #0c447c 60%, #185fa5 100%); border-bottom: 1px solid rgba(133,183,235,0.2);">
+          <div class="berita-icon-wrap mb-3">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+            </svg>
+          </div>
+          <h2 class="berita-sidebar-title relative z-10">{{ .Title }}</h2>
+          <div class="berita-sidebar-divider mt-3"></div>
+        </div>
+
+        <nav class="berita-nav px-3 py-3 flex flex-col gap-2">
+          {{ range $paginator.Pages }}
+          <button data-target="konten-{{ .File.BaseFileName }}" class="berita-menu-item desktop-menu-item">
+            <span class="berita-menu-dot"></span>
+            <div class="berita-menu-body">
+              <span class="berita-menu-label">{{ .Title }}</span>
+              <span class="berita-menu-date">{{ .Date.Format "02 Jan 2006" }}</span>
+            </div>
+            <span class="berita-menu-arrow">›</span>
+          </button>
+          {{ end }}
+        </nav>
+
+        <div class="berita-sidebar-footer px-4 py-3">
+          <div class="berita-footer-line"></div>
+          <p class="berita-footer-text">Biro Organisasi</p>
+        </div>
+      </aside>
+
+      <!-- KONTEN PANEL DESKTOP -->
+      <main id="desktop-main" class="md:col-span-3 rounded-2xl shadow-2xl overflow-hidden backdrop-blur-sm" style="background: rgba(240, 247, 254, 0.8); border: 1px solid rgba(55,138,221,0.15);">
+        {{ range $paginator.Pages }}
+        <div id="konten-{{ .File.BaseFileName }}" class="berita-content hidden">
+          <div class="relative px-8 py-6 overflow-hidden" style="background: linear-gradient(90deg, #0c447c, #185fa5);">
+            <div class="absolute -right-10 -top-10 w-40 h-40 rounded-full" style="background: rgba(255,255,255,0.05);"></div>
+            <h1 class="text-white text-2xl font-semibold relative z-10 leading-snug">{{ .Title }}</h1>
+            <div class="flex gap-1 mt-3 relative z-10">
+              <span class="h-0.5 w-8 rounded-full" style="background: rgba(255,255,255,0.9);"></span>
+              <span class="h-0.5 w-4 rounded-full bg-yellow-400"></span>
+              <span class="h-0.5 w-2 rounded-full" style="background: rgba(255,255,255,0.3);"></span>
+            </div>
+          </div>
+          <div class="px-8 pt-5 pb-2">
+            <p class="text-sm font-medium" style="color: #378add;">{{ .Date.Format "Monday, 02 January 2006" }}</p>
+          </div>
+          <div class="px-8 pb-6">
+            <div class="prose prose-lg max-w-none prose-headings:text-blue-900 prose-p:text-gray-900 prose-p:leading-relaxed prose-a:text-blue-700 prose-strong:text-blue-900 prose-li:text-gray-800">
+              {{ .Content | safeHTML }}
+            </div>
+          </div>
+        </div>
+        {{ end }}
+
+        <div id="berita-default" class="hidden text-center p-16" style="color: #185fa5;">
+          <svg class="w-12 h-12 mx-auto mb-4" style="color: #378add;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414A1 1 0 0119 9.414V19a2 2 0 01-2 2z"/>
+          </svg>
+          <span class="font-medium">Silakan pilih berita dari sebelah kiri.</span>
+        </div>
+      </main>
+    </div>
+
+    <!-- ===== MOBILE LAYOUT: ACCORDION FULLSCREEN ===== -->
+    <div class="md:hidden">
+
+      <!-- Header mobile -->
+      <div class="mobile-accordion-header rounded-2xl mb-4 px-5 py-4 flex items-center gap-3 shadow-xl">
+        <div class="berita-icon-wrap-sm">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="16" y1="13" x2="8" y2="13"></line>
+            <line x1="16" y1="17" x2="8" y2="17"></line>
+          </svg>
+        </div>
+        <h2 class="mobile-accordion-title">{{ .Title }}</h2>
+      </div>
+
+      <!-- Accordion items -->
+      <div class="flex flex-col gap-3">
+        {{ range $i, $page := $paginator.Pages }}
+        <div class="accordion-item rounded-2xl overflow-hidden shadow-xl">
+
+          <!-- Accordion trigger -->
+          <button 
+            class="accordion-trigger w-full flex items-center justify-between px-5 py-4 text-left"
+            aria-expanded="false"
+          >
+            <div class="flex items-center gap-3 flex-1 min-w-0">
+              <span class="accordion-dot"></span>
+              <div class="min-w-0">
+                <span class="accordion-label block">{{ $page.Title }}</span>
+                <span class="accordion-date block">{{ $page.Date.Format "02 Jan 2006" }}</span>
+              </div>
+            </div>
+            <span class="accordion-chevron ml-3 flex-shrink-0">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </span>
+          </button>
+
+          <!-- Accordion body -->
+          <div class="accordion-body">
+            <div class="accordion-body-inner">
+
+              <!-- Content header -->
+              <div class="relative px-6 py-5 overflow-hidden" style="background: linear-gradient(90deg, #0c447c, #185fa5);">
+                <div class="absolute -right-8 -top-8 w-32 h-32 rounded-full" style="background: rgba(255,255,255,0.05);"></div>
+                <h1 class="text-white text-xl font-semibold relative z-10 leading-snug">{{ $page.Title }}</h1>
+                <div class="flex gap-1 mt-2 relative z-10">
+                  <span class="h-0.5 w-8 rounded-full" style="background: rgba(255,255,255,0.9);"></span>
+                  <span class="h-0.5 w-4 rounded-full bg-yellow-400"></span>
+                  <span class="h-0.5 w-2 rounded-full" style="background: rgba(255,255,255,0.3);"></span>
+                </div>
+              </div>
+
+              <!-- Date -->
+              <div class="px-6 pt-4 pb-1">
+                <p class="text-sm font-medium" style="color: #378add;">{{ $page.Date.Format "Monday, 02 January 2006" }}</p>
+              </div>
+
+              <!-- Content -->
+              <div class="px-6 pb-6">
+                <div class="prose prose-base max-w-none prose-headings:text-blue-900 prose-p:text-gray-900 prose-p:leading-relaxed prose-a:text-blue-700 prose-strong:text-blue-900 prose-li:text-gray-800">
+                  {{ $page.Content | safeHTML }}
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+        {{ end }}
+      </div>
+
+      <!-- Footer mobile -->
+      <div class="mt-6 text-center">
+        <div class="berita-footer-line-mobile mx-auto mb-2" style="max-width: 120px;"></div>
+        <p class="berita-footer-text">Biro Organisasi</p>
+      </div>
+    </div>
+
+    <!-- PAGINATION -->
+    <div class="mt-8 flex justify-center">
+      {{ if gt $paginator.TotalPages 1 }}
+      <div class="flex space-x-2">
+        {{ if $paginator.HasPrev }}
+        <a href="{{ $paginator.Prev.URL }}" class="px-4 py-2 rounded-xl text-sm font-medium backdrop-blur-sm" style="background: rgba(255,255,255,0.5); border: 1px solid rgba(55,138,221,0.3); color: #185fa5;">«</a>
+        {{ end }}
+        {{ range $paginator.Pagers }}
+        <a href="{{ .URL }}" class="px-4 py-2 rounded-xl text-sm font-medium backdrop-blur-sm" style="{{ if eq .PageNumber $paginator.PageNumber }}background: #185fa5; color: #fff; border: 1px solid #185fa5;{{ else }}background: rgba(255,255,255,0.5); border: 1px solid rgba(55,138,221,0.3); color: #185fa5;{{ end }}">{{ .PageNumber }}</a>
+        {{ end }}
+        {{ if $paginator.HasNext }}
+        <a href="{{ $paginator.Next.URL }}" class="px-4 py-2 rounded-xl text-sm font-medium backdrop-blur-sm" style="background: rgba(255,255,255,0.5); border: 1px solid rgba(55,138,221,0.3); color: #185fa5;">»</a>
+        {{ end }}
+      </div>
+      {{ end }}
+    </div>
+
+  </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+  /* ===== DESKTOP: sidebar + panel kanan ===== */
+  var menuItems = document.querySelectorAll(".desktop-menu-item");
+  var contents = document.querySelectorAll(".berita-content");
+  var defaultBox = document.getElementById("berita-default");
+
+  if (menuItems.length > 0) {
+    contents.forEach(function(c) { c.classList.add("hidden"); });
+    if (defaultBox) defaultBox.classList.add("hidden");
+
+    function showContent(item) {
+      menuItems.forEach(function(btn) { btn.classList.remove("active"); });
+      item.classList.add("active");
+      contents.forEach(function(c) { c.classList.add("hidden"); });
+      var target = document.getElementById(item.dataset.target);
+      if (target) target.classList.remove("hidden");
+    }
+
+    menuItems.forEach(function(item) {
+      item.addEventListener("click", function() { showContent(item); });
+    });
+
+    showContent(menuItems[0]);
+  } else if (defaultBox) {
+    defaultBox.classList.remove("hidden");
+  }
+
+  /* ===== MOBILE: accordion ===== */
+  var accordionItems = document.querySelectorAll(".accordion-item");
+
+  accordionItems.forEach(function(item) {
+    var trigger = item.querySelector(".accordion-trigger");
+    var body = item.querySelector(".accordion-body");
+
+    trigger.addEventListener("click", function() {
+      var isOpen = item.classList.contains("accordion-open");
+
+      // Tutup semua
+      accordionItems.forEach(function(other) {
+        other.classList.remove("accordion-open");
+        other.querySelector(".accordion-trigger").setAttribute("aria-expanded", "false");
+        other.querySelector(".accordion-body").classList.remove("accordion-body-open");
+      });
+
+      // Buka yang diklik (toggle)
+      if (!isOpen) {
+        item.classList.add("accordion-open");
+        trigger.setAttribute("aria-expanded", "true");
+        body.classList.add("accordion-body-open");
+
+        // Scroll ke item ini
+        setTimeout(function() {
+          item.scrollIntoView({ behavior: "smooth", block: "start" });
+        }, 50);
+      }
+    });
+  });
+});
+</script>
+
+<style>
+/* ===== DESKTOP SIDEBAR ===== */
+.berita-sidebar {
+  background: linear-gradient(160deg, rgba(10, 31, 56, 0.95) 0%, rgba(12, 47, 82, 0.95) 50%, rgba(12, 61, 107, 0.95) 100%);
+  border: 1px solid rgba(133,183,235,0.15);
+  backdrop-filter: blur(10px);
+}
+.berita-icon-wrap {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 46px; height: 46px; border-radius: 12px;
+  background: rgba(55,138,221,0.25); border: 1px solid rgba(133,183,235,0.35);
+  color: #85b7eb; position: relative; z-index: 10; margin: 0 auto;
+}
+.berita-sidebar-title {
+  font-size: 0.8rem; font-weight: 700; color: #b5d4f4;
+  letter-spacing: 0.06em; text-transform: uppercase;
+}
+.berita-sidebar-divider {
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(133,183,235,0.4), transparent);
+}
+.berita-nav { background: transparent; }
+.berita-menu-item {
+  display: flex; align-items: center; gap: 8px;
+  width: 100%; text-align: left; padding: 9px 10px;
+  border-radius: 9px; border: 1px solid rgba(133,183,235,0.1);
+  background: rgba(255,255,255,0.03); color: #85b7eb;
+  cursor: pointer; transition: all 0.2s ease;
+}
+.berita-menu-item:hover {
+  background: rgba(55,138,221,0.15); border-color: rgba(133,183,235,0.3);
+  color: #e0f2fe; transform: translateX(2px);
+}
+.berita-menu-item.active {
+  background: linear-gradient(90deg, rgba(37,99,235,0.45), rgba(24,95,165,0.3));
+  border-color: rgba(133,183,235,0.4); color: #fff; transform: translateX(3px);
+}
+.berita-menu-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: rgba(133,183,235,0.4); flex-shrink: 0; transition: background 0.2s ease;
+}
+.berita-menu-item.active .berita-menu-dot { background: #60a5fa; }
+.berita-menu-body { flex: 1; min-width: 0; }
+.berita-menu-label {
+  display: block; font-size: 0.82rem; font-weight: 500;
+  line-height: 1.3; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.berita-menu-date {
+  display: block; font-size: 0.7rem;
+  color: rgba(133,183,235,0.6); margin-top: 2px;
+}
+.berita-menu-item.active .berita-menu-date { color: rgba(255,255,255,0.5); }
+.berita-menu-arrow { font-size: 1rem; color: rgba(133,183,235,0.35); transition: all 0.2s; }
+.berita-menu-item.active .berita-menu-arrow,
+.berita-menu-item:hover .berita-menu-arrow { color: #93c5fd; }
+.berita-sidebar-footer { border-top: 1px solid rgba(133,183,235,0.1); }
+.berita-footer-line {
+  height: 2px; border-radius: 2px;
+  background: linear-gradient(to right, #185fa5, #378add, #85b7eb);
+  margin-bottom: 6px; opacity: 0.8;
+}
+.berita-footer-text {
+  font-size: 0.65rem; color: rgba(133,183,235,0.5);
+  text-align: center; letter-spacing: 0.1em; text-transform: uppercase; margin: 0;
+}
+main { opacity: 1 !important; }
+.berita-content { display: none; }
+.berita-content:not(.hidden) { display: block; }
+
+/* ===== MOBILE ACCORDION ===== */
+.mobile-accordion-header {
+  background: linear-gradient(135deg, #0c2a4a 0%, #0c447c 60%, #185fa5 100%);
+  border: 1px solid rgba(133,183,235,0.2);
+  backdrop-filter: blur(10px);
+}
+.berita-icon-wrap-sm {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 36px; height: 36px; border-radius: 9px; flex-shrink: 0;
+  background: rgba(55,138,221,0.25); border: 1px solid rgba(133,183,235,0.35);
+  color: #85b7eb;
+}
+.mobile-accordion-title {
+  font-size: 0.8rem; font-weight: 700; color: #b5d4f4;
+  letter-spacing: 0.07em; text-transform: uppercase; margin: 0;
+}
+
+/* Accordion item */
+.accordion-item {
+  background: linear-gradient(160deg, rgba(10,31,56,0.95) 0%, rgba(12,47,82,0.95) 50%, rgba(12,61,107,0.95) 100%);
+  border: 1px solid rgba(133,183,235,0.15);
+  backdrop-filter: blur(10px);
+  transition: border-color 0.25s ease;
+}
+.accordion-item.accordion-open {
+  border-color: rgba(133,183,235,0.4);
+  background: linear-gradient(160deg, rgba(10,31,56,0.97) 0%, rgba(12,47,82,0.97) 50%, rgba(12,68,124,0.97) 100%);
+}
+
+/* Trigger */
+.accordion-trigger {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+.accordion-trigger:hover {
+  background: rgba(55,138,221,0.08);
+}
+.accordion-dot {
+  width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0;
+  background: rgba(133,183,235,0.4);
+  transition: background 0.25s ease;
+}
+.accordion-item.accordion-open .accordion-dot { background: #60a5fa; }
+.accordion-label {
+  font-size: 0.9rem; font-weight: 600; color: #85b7eb;
+  line-height: 1.3; transition: color 0.2s ease;
+}
+.accordion-item.accordion-open .accordion-label { color: #ffffff; }
+.accordion-date {
+  font-size: 0.7rem; color: rgba(133,183,235,0.5); margin-top: 2px;
+}
+.accordion-item.accordion-open .accordion-date { color: rgba(255,255,255,0.45); }
+.accordion-chevron {
+  color: rgba(133,183,235,0.4);
+  transition: transform 0.3s cubic-bezier(0.4,0,0.2,1), color 0.2s ease;
+}
+.accordion-item.accordion-open .accordion-chevron {
+  transform: rotate(180deg);
+  color: #93c5fd;
+}
+
+/* Accordion body dengan animasi tinggi */
+.accordion-body {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.35s cubic-bezier(0.4,0,0.2,1);
+}
+.accordion-body-open {
+  grid-template-rows: 1fr;
+}
+.accordion-body-inner {
+  overflow: hidden;
+  background: rgba(240,247,254,0.92);
+}
+
+/* Footer mobile */
+.berita-footer-line-mobile {
+  height: 2px; border-radius: 2px;
+  background: linear-gradient(to right, #185fa5, #378add, #85b7eb);
+  opacity: 0.7;
+}
+</style>
+
+{{ end }}

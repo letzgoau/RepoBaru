@@ -1,0 +1,11 @@
+[[params.homepage.social.icons]]
+website = "youtube"
+url = "https://www.youtube.com/channel/UC-76UTZl0LnA-Qlr4NZRRyg"
+
+[[params.homepage.social.icons]]
+website = "instagram"
+url = "https://www.instagram.com/organisasi_kalbar"
+
+[[params.homepage.social.icons]]
+website = "facebook"
+url = "https://www.facebook.com/OrganisasiKalbar"

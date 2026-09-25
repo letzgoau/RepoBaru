@@ -1,0 +1,4 @@
+---
+title: Infografis
+type: gallery
+---

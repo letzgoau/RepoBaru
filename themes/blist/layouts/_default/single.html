@@ -1,0 +1,144 @@
+{{ define "main" }}
+  <div 
+    class="relative min-h-screen bg-center bg-cover bg-no-repeat flex flex-col items-center justify-start py-10"
+    style="background-image: url('{{ "images/mural.jpeg" | relURL }}');"
+  >
+    <!-- Overlay hitam transparan -->
+    <div class="absolute inset-0 bg-black bg-opacity-60 z-0"></div>
+
+    <!-- Konten utama di atas overlay -->
+    <div class="relative z-10 w-full flex flex-col items-center justify-start">
+      
+      {{ $lastmodstr := (partial "date.html" (dict "date" .Lastmod "language" $.Page.Language "format" "long")) }}
+      {{ $datestr := (partial "date.html" (dict "date" .Date "language" $.Page.Language "format" "long")) }}
+
+      {{ if or (not .Params.thumbnail) (and (not .Site.Params.hidePageThumbnail) (not .Params.hidePageThumbnail)) }}
+        <!-- Tidak ada thumbnail -->
+      {{ else }}
+      <div class="relative max-w-5xl mx-auto px-4 mt-8 mb-8">
+        <img 
+          src="{{ .Params.thumbnail }}" 
+          alt="{{ .Title }}" 
+          class="rounded-3xl shadow-xl w-full object-cover bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 transition duration-500 ease-in-out transform hover:scale-[1.02] hover:shadow-2xl"
+        />
+        {{ if not (or (or .Site.Params.hideMeta .Params.hideMeta) false) }}
+        <div 
+          class="absolute top-3 right-6 rounded-lg shadow-lg bg-blue-600 text-white dark:bg-blue-500 dark:text-gray-50 px-4 py-1.5 text-sm font-semibold tracking-wide ring-1 ring-blue-300/40"
+          style="letter-spacing: 0.4px;"
+        >
+          {{ $datestr }}
+        </div>
+        {{ end }}
+      </div>  
+      {{ end }}
+
+      <article 
+        class="prose lg:prose-lg mx-auto my-12 px-8 py-10 text-black bg-white rounded-3xl shadow-md border transition duration-500 ease-in-out"
+        style="max-width: 960px;"
+      >
+        {{ if not .Params.images }}
+        <h1 
+          class="text-3xl md:text-4xl font-extrabold mb-8 pb-2 pt-2 text-center leading-tight text-gray-900"
+          style="text-shadow: 0 1px 2px rgba(0,0,0,0.05);"
+        >
+          {{ .Title    }}
+        </h1>
+        {{ end }}
+
+        <div 
+          class="content-body leading-relaxed tracking-wide text-gray-800 text-justify"
+          style="line-height: 1.85; font-size: 1.08rem;"
+        >
+          {{ .Content | safeHTML }}
+        </div>
+
+        <style>
+          article.prose h1, article.prose h2, article.prose h3, article.prose h4 {
+            color: #1e40af;
+            font-weight: 700;
+          }
+          article.prose p { color: #1f2937; }
+          article.prose a {
+            color: #2563eb;
+            text-decoration: underline;
+            transition: color 0.2s ease-in-out;
+          }
+          article.prose a:hover { color: #1d4ed8; }
+          article.prose blockquote {
+            color: #1e3a8a;
+            background: #eff6ff;
+            border-left: 5px solid #3b82f6;
+            padding: 1rem 1.25rem;
+            border-radius: 0.5rem;
+            font-style: italic;
+          }
+          article.prose code {
+            background-color: #f3f4f6;
+            color: #2563eb;
+            padding: 2px 5px;
+            border-radius: 5px;
+            font-weight: 500;
+          }
+          article.prose strong { color: #111827; }
+        </style>
+
+        <div class="relative mx-auto mt-14 mb-20 max-w-5xl">
+          <div class="owl-carousel owl-theme">
+            {{ range $index, $imageUrl := .Params.images }}
+            <div class="item px-3">
+              <img 
+                src="{{ $imageUrl }}" 
+                alt="Image {{ add $index 1 }}" 
+                class="rounded-2xl shadow-lg w-full object-cover bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 transition duration-500 ease-in-out transform hover:scale-[1.02] hover:shadow-xl" 
+                style="height: 380px;" 
+                loading="lazy"
+              />
+            </div>
+            {{ end }}
+          </div>
+
+          {{ if not (or (or .Site.Params.hideMeta .Params.hideMeta) false) }}
+          <div 
+            class="absolute -bottom-14 right-8 rounded-lg shadow-lg bg-blue-600 text-white dark:bg-blue-500 dark:text-gray-50 px-4 py-2 text-sm font-semibold tracking-wide ring-1 ring-blue-300/40"
+            style="letter-spacing: 0.3px;"
+          >
+            {{ $datestr }}
+          </div>
+          {{ end }}
+        </div>
+
+        <script>
+          $(document).ready(function() {
+            $(".owl-carousel").owlCarousel({
+              items: 1,
+              loop: true,
+              nav: true,
+              dots: false,
+              autoplay: true,
+              autoplayTimeout: 3500,
+              autoplayHoverPause: true,
+              smartSpeed: 700,
+              responsiveClass: true,
+              autoHeight: true,
+              navText: [
+                '<span class="owl-prev bg-blue-600 text-white rounded-full px-3 py-2 shadow-md hover:bg-blue-700 transition ease-in-out duration-200">‹</span>', 
+                '<span class="owl-next bg-blue-600 text-white rounded-full px-3 py-2 shadow-md hover:bg-blue-700 transition ease-in-out duration-200">›</span>'
+              ],
+              responsive: {
+                0: { items: 1 },
+                600: { items: 1 },
+                1000: { items: 2 }
+              }
+            });
+          });
+        </script>
+
+      </article>
+
+      {{- partial "comments.html" . -}}
+      {{- partial "intro.html" . -}}
+    </div> <!-- Tutup konten utama -->
+
+  </div> <!-- Penutup background mural -->
+
+{{ end }}

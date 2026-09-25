@@ -1,0 +1,58 @@
+[global]
+baseurl = ""
+metaDataFormat = "yaml"
+title = "Situs Resmi Biro Organisasi Sekretariat Daerah Kalimantan Barat"
+theme = "blist"
+DefaultContentLanguage = "id"
+DefaultContentLanguageInSubdir = false
+contentDir = "content" #English"
+weight = 1
+languageName = "Indonesia"
+[languages.id.params]
+introTitle = "Biro Organisasi Sekretariat Daerah Kalimantan Barat"
+introSubtitle = "Website resmi Biro Organisasi Sekretariat Daerah Kalimantan Barat"
+introPhoto = "/picture.jpg"
+logo = "/logo.png"
+name = "Top Post"
+url = "/en/blog/emoji-support/"
+weight = 4
+[params]
+phone = "Nomor HP Anda"
+address = "Jalan Ahmad Yani Pontianak"
+email = "organisasi@kalbarprov.go.id"
+darkModeToggle = true
+enableSearch = true
+searchKeys = "["
+copyright = "Copyright © 2024"
+favicon = "/favicon.svg"
+ascentColor = "bg-defaultColor"
+frontBundle = "Berita"
+frontBundle2 = "Galeri"
+hideMeta = false
+hideOtherLanguages = false
+toc = true
+hidePageThumbnail = false
+introTitle = "Dinas Komunikasi dan Informatika"
+introSubtitle = "Website resmi Dinas Komunikasi dan Informatika provinsi Kalimantan Barat"
+[params.comments]
+system = "giscus"
+repo = ""
+repoid = ""
+category = ""
+categoryid = ""
+mapping = ""
+strict = ""
+reactionsenabled = ""
+emitmetadata = ""
+inputposition = ""
+theme = ""
+[params.homepage.social]
+title = "Follow me"
+description = "I work on everything coding and tweet developer memes"
+[build]
+writeStats = true
+[markup]
+[markup.highlight]
+style = "dracula"
+[markup.goldmark.renderer]
+unsafe = true

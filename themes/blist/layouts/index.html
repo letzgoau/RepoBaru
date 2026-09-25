@@ -1,0 +1,980 @@
+{{ define "main" }}
+
+<!-- ===== SCROLL ANIMATION STYLES ===== -->
+<style>
+/* === SCROLL REVEAL BASE — dua arah (naik & turun) === */
+.reveal,
+.reveal-left,
+.reveal-right,
+.reveal-scale {
+  opacity: 0;
+  transition: opacity 0.65s cubic-bezier(0.22, 1, 0.36, 1),
+              transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.reveal           { transform: translateY(36px); }
+.reveal-left      { transform: translateX(-44px); }
+.reveal-right     { transform: translateX(44px); }
+.reveal-scale     { transform: scale(0.93); }
+
+.reveal.visible,
+.reveal-left.visible,
+.reveal-right.visible,
+.reveal-scale.visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* Staggered children — juga reset saat keluar viewport */
+.reveal-stagger > * {
+  opacity: 0;
+  transform: translateY(26px);
+  transition: opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+              transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.reveal-stagger.visible > *:nth-child(1)  { opacity:1; transform:none; transition-delay:0.04s; }
+.reveal-stagger.visible > *:nth-child(2)  { opacity:1; transform:none; transition-delay:0.12s; }
+.reveal-stagger.visible > *:nth-child(3)  { opacity:1; transform:none; transition-delay:0.20s; }
+.reveal-stagger.visible > *:nth-child(4)  { opacity:1; transform:none; transition-delay:0.28s; }
+.reveal-stagger.visible > *:nth-child(5)  { opacity:1; transform:none; transition-delay:0.36s; }
+.reveal-stagger.visible > *:nth-child(6)  { opacity:1; transform:none; transition-delay:0.44s; }
+.reveal-stagger.visible > *:nth-child(7)  { opacity:1; transform:none; transition-delay:0.52s; }
+.reveal-stagger.visible > *:nth-child(8)  { opacity:1; transform:none; transition-delay:0.60s; }
+.reveal-stagger.visible > *:nth-child(n+9){ opacity:1; transform:none; transition-delay:0.68s; }
+
+/* Saat keluar viewport — kembalikan ke hidden */
+.reveal-stagger:not(.visible) > * {
+  opacity: 0;
+  transform: translateY(26px);
+  transition: opacity 0.35s ease, transform 0.35s ease;
+}
+
+/* Float on hover cards */
+.card-float {
+  transition: transform 0.38s cubic-bezier(0.34, 1.56, 0.64, 1),
+              box-shadow 0.38s ease;
+  will-change: transform;
+}
+.card-float:hover {
+  transform: translateY(-5px) scale(1.018);
+  box-shadow: 0 16px 36px rgba(0,0,0,0.11);
+}
+
+/* Glow pulse section title */
+@keyframes glowPulse {
+  0%, 100% { box-shadow: 0 3px 8px rgba(0,0,0,0.18), 0 0 0 rgba(59,130,246,0); }
+  50%       { box-shadow: 0 3px 8px rgba(0,0,0,0.18), 0 0 18px rgba(59,130,246,0.35); }
+}
+.section-title {
+  animation: glowPulse 3s ease-in-out infinite;
+}
+
+/* ========================================
+   GALERI FOTO — ukuran FIXED, gambar object-contain
+   ======================================== */
+.foto-slide-wrapper {
+  width: 100%;
+  height: 260px;           /* tinggi tetap */
+  border-radius: 0.75rem;
+  overflow: hidden;
+  background: #e5e7eb;
+}
+.foto-slide-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;     /* gambar utuh, tidak dipotong */
+  display: block;
+  transition: transform 0.4s ease;
+}
+.swiper-slide:hover .foto-slide-wrapper img {
+  transform: scale(1.04);
+}
+
+/* Homepage compact layout */
+.home-compact-section { padding: 2rem 1rem; }
+.home-panel {
+  width: min(100%, 1180px);
+  padding: 1.25rem;
+  border-radius: 1rem;
+}
+.home-main-grid { gap: 1.25rem; }
+.home-feature-card { min-height: 360px; }
+.home-feature-content {
+  min-height: 360px;
+  padding: 1rem;
+  border-radius: 1rem;
+  background: #ffffff;
+  box-shadow: 0 10px 18px rgba(0,0,0,0.08);
+}
+.dark .home-feature-content { background: #dbeafe; }
+.home-media-frame {
+  height: 220px;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f3f4f6;
+}
+.home-media-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain !important;
+}
+.home-infographic-content {
+  display: flex;
+  flex-direction: column;
+  padding: 0.75rem;
+}
+.home-infographic-content .swiper-wrapper {
+  flex: 1;
+  align-items: stretch;
+}
+.home-news-feature-content {
+  display: flex;
+  flex-direction: column;
+  padding: 0.75rem;
+}
+.home-news-feature-content .swiper-wrapper {
+  flex: 1;
+  align-items: stretch;
+}
+.home-news-feature-slide,
+.home-infographic-slide {
+  height: auto;
+  min-height: 0;
+}
+.home-news-feature-frame,
+.home-infographic-frame {
+  flex: 1;
+  min-height: 0;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  background: #f3f4f6;
+}
+.home-news-feature-frame img,
+.home-infographic-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain !important;
+}
+.home-news-feature-caption,
+.home-infographic-caption {
+  position: absolute;
+  left: 0.75rem;
+  right: 0.75rem;
+  bottom: 0.75rem;
+  padding: 0.45rem 0.65rem;
+  border-radius: 0.65rem;
+  background: rgba(15, 23, 42, 0.68);
+  color: #fff;
+}
+.home-news-feature-caption .date-badge {
+  font-size: 0.7rem;
+  padding: 0.15rem 0.55rem;
+}
+.home-feature-content .swiper-slide {
+  min-height: 300px;
+}
+.home-card-title {
+  font-size: 0.86rem;
+  line-height: 1.35;
+}
+.home-date-badge {
+  font-size: 0.72rem;
+  padding: 0.18rem 0.62rem;
+}
+.home-agenda-card { min-height: 360px; }
+.home-agenda-header { padding: 0.85rem 1rem; }
+.home-agenda-body { padding: 1rem; }
+.home-agenda-list { max-height: 235px; }
+.home-agenda-item {
+  padding: 0.8rem;
+  border-radius: 0.75rem;
+}
+.home-news-frame,
+.home-gallery-frame,
+.home-video-frame {
+  height: 440px;
+}
+.home-list-card { padding: 0.7rem; }
+.home-list-thumb {
+  width: 5rem;
+  height: 3.5rem;
+  background: #f3f4f6;
+}
+.home-list-thumb img,
+.home-news-frame .swiper-slide img,
+.home-photo-frame img {
+  object-fit: contain !important;
+}
+.home-announcement-frame,
+.home-photo-frame {
+  height: 300px;
+  border-radius: 0.75rem;
+  background: #f3f4f6;
+}
+.home-announcement-frame img,
+.home-photo-frame img {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain !important;
+}
+.dark .home-media-frame,
+.dark .home-list-thumb,
+.dark .home-news-feature-frame,
+.dark .home-infographic-frame,
+.dark .home-announcement-frame,
+.dark .home-photo-frame {
+  background: #1f2937;
+}
+.home-video-grid { gap: 0.85rem; }
+
+@media (min-width: 1280px) {
+  .home-panel { width: min(100%, 1120px); }
+  .home-compact-section { padding-top: 1.75rem; padding-bottom: 1.75rem; }
+}
+
+@media (max-width: 1024px) {
+  .home-panel {
+    width: min(100%, 94vw);
+    padding: 1rem;
+  }
+  .home-main-grid { gap: 1rem; }
+  .home-feature-card,
+  .home-agenda-card { min-height: 330px; }
+  .home-feature-content { min-height: 330px; }
+  .home-media-frame { height: 205px; }
+  .home-news-frame,
+  .home-gallery-frame,
+  .home-video-frame { height: auto; min-height: 390px; }
+}
+
+@media (max-width: 768px) {
+  .home-compact-section { padding: 1.5rem 0.85rem; }
+  .home-panel {
+    width: 100%;
+    padding: 0.9rem;
+    border-radius: 0.85rem;
+  }
+  .home-feature-card,
+  .home-feature-content,
+  .home-agenda-card,
+  .home-news-frame,
+  .home-gallery-frame,
+  .home-video-frame {
+    min-height: 0;
+    height: auto;
+  }
+  .home-media-frame { height: 220px; }
+  .home-announcement-frame,
+  .home-photo-frame { height: 280px; }
+  .home-agenda-list { max-height: 260px; }
+}
+
+/* Ukuran hero sedikit dikurangi di mobile */
+@media (max-width: 640px) {
+  .hero-title { font-size: 2.2rem !important; }
+  .hero-desc  { font-size: 0.95rem !important; }
+  .foto-slide-wrapper { height: 200px; }
+  .home-media-frame { height: 205px; }
+  .home-announcement-frame,
+  .home-photo-frame { height: 250px; }
+  .home-list-thumb { width: 4.5rem; height: 3.2rem; }
+}
+</style>
+
+<!-- ===== SWIPER CSS ===== -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+
+<!-- =========================================
+     HERO SECTION
+========================================= -->
+<section class="relative w-full h-screen flex items-center justify-center overflow-hidden">
+
+  <!-- Background: iframe + overlay -->
+  <div class="absolute inset-0 z-0 pointer-events-none overflow-hidden">
+      <iframe
+        class="absolute"
+        style="
+          width: 100vw; 
+          height: 56.25vw; 
+          min-height: 100vh; 
+          min-width: 177.78vh;
+          top: 0;
+          left: 0;
+        "
+        src="https://www.youtube.com/embed/{{ .Site.Params.youtube_bg_id }}?autoplay=1&mute=1&loop=1&controls=0&playsinline=1&playlist={{ .Site.Params.youtube_bg_id }}&modestbranding=1&rel=0&showinfo=0&iv_load_policy=3&disablekb=1&fs=0"
+        frameborder="0"
+        allow="autoplay; encrypted-media"
+        allowfullscreen>
+      </iframe>
+    <!-- Overlay -->
+    <div class="absolute inset-0 bg-black bg-opacity-50"></div>
+  </div>
+
+  <!-- Content -->
+  <div class="relative z-20 w-full text-center text-white py-8 px-5 flex flex-col items-center gap-6">
+
+    <img src="/images/ro_orgs_.png"
+         alt="Logo Biro Organisasi"
+         class="h-32 sm:h-44 object-contain drop-shadow-2xl animate-logoPop">
+
+    <h1 class="hero-title text-4xl sm:text-5xl font-extrabold tracking-wide drop-shadow-xl animate-fadeInUp"
+        style="animation-delay:200ms">
+      BIRO ORGANISASI
+    </h1>
+
+    <p class="hero-desc max-w-2xl text-base sm:text-lg leading-relaxed animate-fadeInUp drop-shadow"
+       style="animation-delay:400ms">
+      Biro Organisasi mempunyai tugas merumuskan dan mengkoordinasikan Kebijakan Daerah
+      di Bidang Kelembagaan Perangkat Daerah dan Analisis Jabatan, Ketatalaksanaan,
+      serta Reformasi Birokrasi dan Akuntabilitas Kinerja.
+    </p>
+
+    <div class="flex flex-wrap justify-center gap-5 mt-6 animate-fadeInUp reveal-stagger"
+         style="animation-delay:600ms">
+      {{ $frontBundle2 := .Site.Params.frontBundle2 | default "gallery" }}
+      {{ range first 9 (where .Site.RegularPages.ByDate.Reverse "Type" $frontBundle2) }}
+      {{ $img  := cond (isset .Params "thumbnail") .Params.thumbnail "/images/default-logo.png" }}
+      {{ $link := cond (isset .Params "eurl") .Params.eurl .RelPermalink }}
+      <a href="{{ $link }}" target="_blank" rel="noopener noreferrer"
+         class="group relative bg-white rounded-2xl shadow-lg w-20 h-20 flex items-center justify-center card-float">
+        <img src="{{ $img }}" alt="{{ .Title }}"
+             class="max-h-14 object-contain group-hover:scale-110 transition-transform duration-500">
+        <span class="absolute -bottom-9 left-1/2 -translate-x-1/2
+                     bg-black/80 text-white text-[11px] px-2 py-1 rounded-md shadow
+                     opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
+          {{ .Title }}
+        </span>
+      </a>
+      {{ end }}
+    </div>
+  </div>
+
+</section>
+
+<style>
+@keyframes logoPop {
+  0%   { transform: scale(0.75); opacity: 0; }
+  100% { transform: scale(1);    opacity: 1; }
+}
+.animate-logoPop { animation: logoPop 0.7s ease-out both; }
+
+@keyframes fadeInUp {
+  0%   { opacity: 0; transform: translateY(18px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+.animate-fadeInUp { animation: fadeInUp 0.6s ease-out both; }
+</style>
+
+
+<!-- =========================================
+     MARQUEE
+========================================= -->
+<section id="hero-slider-marquee" class="w-full bg-blue-100 dark:bg-gray-900">
+  <div class="w-full bg-blue-300 dark:bg-blue-800 py-2 overflow-hidden relative">
+    {{ $runningText := .Site.Params.running_text }}
+    {{ if $runningText }}
+    <div class="marquee">
+      <div class="marquee-text">
+        <p class="font-semibold text-[14px] tracking-wide text-gray-800 dark:text-gray-100" style="font-family:'Poppins',sans-serif">
+          {{ range $runningText }}• {{ .text }}&nbsp;&nbsp;&nbsp;{{ end }}
+        </p>
+      </div>
+    </div>
+    {{ end }}
+  </div>
+</section>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@500&display=swap');
+.marquee { overflow: hidden; white-space: nowrap; }
+.marquee-text { display: inline-block; padding-left: 100%; animation: marquee 18s linear infinite; }
+@keyframes marquee { 0%{transform:translateX(0)} 100%{transform:translateX(-100%)} }
+#hero-slider-marquee .w-full::before,
+#hero-slider-marquee .w-full::after {
+  content:""; position:absolute; top:0; width:50px; height:100%; z-index:10;
+}
+#hero-slider-marquee .w-full::before { left:0;  background:linear-gradient(to right, rgba(49,132,255,.85), transparent); }
+#hero-slider-marquee .w-full::after  { right:0; background:linear-gradient(to left,  rgba(49,132,255,.85), transparent); }
+</style>
+
+
+
+<!-- =========================================
+     BERITA TERKINI + INFOGRAFIS + AGENDA
+========================================= -->
+<body class="flex flex-col min-h-screen">
+<section class="home-compact-section flex-1 bg-white dark:bg-gray-800 flex flex-col justify-center items-center">
+  <div class="home-panel bg-gray-50 dark:bg-blue-800 shadow-[0_8px_20px_rgba(0,0,0,0.05)] mx-auto reveal">
+    <div class="home-main-grid grid grid-cols-1 md:grid-cols-3 items-start">
+
+      <!-- BERITA TERKINI -->
+      <div class="home-feature-card flex flex-col h-full reveal reveal-left">
+        <div class="section-title mb-4 text-[1.05rem] font-bold text-center text-blue-800 dark:text-blue-100 uppercase tracking-wide">
+          Berita Terkini
+        </div>
+
+        <div class="home-feature-content home-news-feature-content relative w-full flex-grow group overflow-hidden">
+          <div class="swiper mySwiperBerita w-full h-full rounded-xl overflow-hidden pb-6">
+            <div class="swiper-wrapper">
+              {{ $berita := where .Site.RegularPages "Section" "berita" }}
+              {{ range first 5 ($berita.ByDate.Reverse) }}
+                {{ $img := .Params.thumbnail | default .Site.Params.no_image }}
+                <div class="swiper-slide home-news-feature-slide flex flex-col items-center relative">
+                  <div class="home-news-feature-frame relative w-full">
+                    <img src="{{ $img }}" alt="{{ .Title }}" loading="lazy" />
+                  </div>
+                  <div class="home-news-feature-caption text-center">
+                    <span class="date-badge home-date-badge bg-blue-600 text-white rounded-full inline-block mb-1">
+                      {{ .Date.Format "2 Jan 2006" }}
+                    </span>
+                    <a href="{{ .RelPermalink }}" class="block hover:text-yellow-300">
+                      <h3 class="home-card-title font-medium line-clamp-2">
+                        {{ .Title | plainify | truncate 100 }}
+                      </h3>
+                    </a>
+                  </div>
+                </div>
+              {{ end }}
+            </div>
+            <div class="swiper-button-prev berita-prev custom-arrow left-2"></div>
+            <div class="swiper-button-next berita-next custom-arrow right-2"></div>
+            <div class="swiper-pagination berita-pagination absolute bottom-[-10px] left-0 right-0 flex justify-center"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- INFOGRAFIS -->
+      <div class="home-feature-card flex flex-col h-full reveal">
+        <div class="section-title mb-4 text-[1.05rem] font-bold text-center text-blue-800 dark:text-blue-100 uppercase tracking-wide">
+          Infografis
+        </div>
+
+          <div class="home-feature-content home-infographic-content swiper mySwiperInfografis w-full flex-grow relative group pb-8 overflow-hidden">
+          <div class="swiper-wrapper">
+            
+            {{ $infografis := where .Site.RegularPages "Section" "infografis" }}
+            {{ range first 5 ($infografis.ByDate.Reverse) }}
+
+              {{ $img := .Params.thumbnail | default .Site.Params.no_image }}
+
+              <div class="swiper-slide home-infographic-slide flex flex-col items-center relative">
+                
+                <div class="home-infographic-frame relative w-full">
+                  <a class="flex items-center justify-center w-full h-full" {{ with .Params.link }}href="{{ . }}" target="_blank" rel="noopener noreferrer"{{ end }}>
+                    
+                    <img 
+                      src="{{ $img | relURL }}" 
+                      alt="{{ .Title }}"
+                      class="transition-transform duration-300 hover:scale-[1.03]" 
+                    />
+
+                  </a>
+                </div>
+
+                {{ with .Title }}
+                  <div class="home-infographic-caption text-center">
+                    <h3 class="home-card-title font-medium line-clamp-2">
+                      {{ . | plainify | truncate 50 }}
+                    </h3>
+                  </div>
+                {{ end }}
+
+              </div>
+
+            {{ end }}
+
+          </div>
+
+          <!-- Navigation -->
+          <div class="swiper-button-prev infografis-prev opacity-0 group-hover:opacity-100 transition duration-300 !text-blue-700 dark:!text-blue-200 !left-0"></div>
+          <div class="swiper-button-next infografis-next opacity-0 group-hover:opacity-100 transition duration-300 !text-blue-700 dark:!text-blue-200 !right-0"></div>
+
+          <!-- Pagination -->
+          <div class="swiper-pagination infografis-pagination mt-6 flex justify-center scale-110"></div>
+        </div>
+      </div>
+
+      <!-- AGENDA -->
+      <div class="agenda-section home-feature-card flex flex-col h-full reveal reveal-right">
+        <div class="section-title mb-4 text-[1.05rem] font-bold text-center text-blue-800 dark:text-blue-100 uppercase tracking-wide">
+          AGENDA BIRO ORGANISASI
+        </div>
+
+        <div class="agenda-card home-agenda-card bg-white dark:bg-blue-100 rounded-2xl shadow-lg overflow-hidden flex flex-col h-full">
+          <div class="agenda-header home-agenda-header bg-blue-600 text-white text-center">
+            <p class="text-xs sm:text-sm opacity-90">
+              Ikuti agenda dan event terbaru dari Biro Organisasi Prov. Kalbar
+            </p>
+          </div>
+
+          <div class="flex justify-center items-center gap-2 mb-3 mt-4">
+            <button id="prevDay" class="nav-btn text-blue-700 dark:text-blue-200">&lt;</button>
+            <div id="currentDate" class="active-day text-sm font-semibold text-gray-800 dark:text-gray-100">
+              {{ now.Format "Mon, 02 Jan 2006" }}
+            </div>
+            <button id="nextDay" class="nav-btn text-blue-700 dark:text-blue-200">&gt;</button>
+          </div>
+
+          <div class="agenda-body home-agenda-body text-center flex-grow" id="agendaBody">
+            {{ $agenda := .Site.Params.agenda }}
+            <div id="agendaList" class="home-agenda-list space-y-3 transition-all duration-300 overflow-y-auto">
+              {{ if gt (len $agenda) 0 }}
+                {{ range $agenda }}
+                  <div class="agenda-item home-agenda-item bg-blue-50 dark:bg-blue-900/30 text-left shadow-sm hover:shadow-md transition-all duration-200">
+                    <h4 class="font-semibold text-blue-700 dark:text-blue-200 text-sm mb-2">📌 {{ .judul }}</h4>
+                    <ul class="text-xs text-gray-700 dark:text-gray-300 space-y-1 ml-1">
+                      <li>🗓️ <strong>Tanggal:</strong> {{ .hari }}</li>
+                      <li>⏰ <strong>Waktu:</strong> {{ .jamMulai | default "-" }} {{ with .jamSelesai }}– {{ . }}{{ end }}</li>
+                      <li>📍 <strong>Tempat:</strong> {{ .lokasi | default "-" }}</li>
+                    </ul>
+                  </div>
+                {{ end }}
+              {{ else }}
+                <div id="noEvent" class="no-event flex flex-col items-center text-center mt-6 animate-fadeIn">
+                  <img src="/images/pngwing.com.png" alt="Tidak ada event" class="w-24 h-24 mb-3 opacity-90">
+                  <p class="font-semibold text-blue-900 dark:text-yellow-800">Tidak ada kegiatan/event yang tersedia</p>
+                  <p class="text-gray-600 dark:text-black text-sm mt-1">Belum ada agenda yang ditambahkan ke sistem.</p>
+                </div>
+              {{ end }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- =========================================
+     BERITA + PENGUMUMAN
+========================================= -->
+<section class="home-compact-section bg-white dark:bg-gray-800">
+  <div class="home-panel bg-white/70 dark:bg-blue-900/60 backdrop-blur-md mx-auto">
+    <div class="home-main-grid grid grid-cols-1 md:grid-cols-12">
+
+      <!-- FRAME BERITA -->
+      <div class="home-news-frame col-span-1 md:col-span-8 bg-white dark:bg-blue-800 rounded-2xl shadow-lg p-4 flex flex-col reveal-left">
+        <div class="section-title mb-4">Berita</div>
+        
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-3 overflow-y-auto pr-1 flex-grow reveal-stagger">
+          {{ range first 4 (where .Site.RegularPages "Section" "berita") }}
+          <div class="card-float home-list-card flex gap-3 bg-white dark:bg-blue-900 rounded-xl hover:shadow-md transition-all h-fit">
+            {{ with .Params.thumbnail }}
+            <div class="home-list-thumb flex-shrink-0 rounded-lg overflow-hidden">
+              <a href="{{ $.RelPermalink }}">
+                <img src="{{ . }}" alt="{{ $.Title }}" class="w-full h-full object-contain">
+              </a>
+            </div>
+            {{ end }}
+            <div class="flex flex-col justify-between min-w-0">
+              <a href="{{ .RelPermalink }}" class="font-semibold text-gray-800 dark:text-white hover:text-blue-600 line-clamp-1 text-sm">
+                {{ .Title | plainify | truncate 100 }}
+              </a>
+              <p class="text-xs text-gray-600 dark:text-gray-300 line-clamp-2">
+                {{ .Summary | plainify | truncate 50 }}
+              </p>
+              <div class="text-[11px] text-gray-500 dark:text-gray-400 mt-1">
+                {{ .Date.Format "2 Jan 2006" }} &nbsp;|&nbsp; {{ .Params.author }}
+              </div>
+            </div>
+          </div>
+          {{ end }}
+        </div>
+
+        <div class="mt-4 text-center">
+          <a href="{{ "berita" | relURL }}" class="inline-block px-5 py-2.5 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition font-semibold text-sm shadow">
+            Lihat Semua Berita →
+          </a>
+        </div>
+      </div>
+
+      <!-- PENGUMUMAN -->
+      <div class="home-news-frame col-span-1 md:col-span-4 bg-white dark:bg-blue-800 rounded-2xl shadow-lg p-4 flex flex-col reveal-right">
+        <div class="section-title mb-4 text-[1.05rem] font-bold text-center text-blue-800 dark:text-blue-100 uppercase tracking-wide">
+          Pengumuman
+        </div>
+
+        <div class="swiper mySwiperPengumuman w-full flex-grow relative group pb-8">
+          <div class="swiper-wrapper">
+            {{ $pengumuman := where .Site.RegularPages "Section" "pengumuman" }}
+            {{ range first 5 ($pengumuman.ByDate.Reverse) }}
+
+              {{ $img := .Params.thumbnail | default .Site.Params.no_image }}
+              {{ $link := .Params.link | default .RelPermalink }}
+
+              <div class="swiper-slide flex flex-col items-center pb-4">
+                <div class="home-announcement-frame relative w-full flex items-center justify-center overflow-visible">
+                  <a href="{{ $link }}" class="flex items-center justify-center w-full h-full" {{ if .Params.link }}target="_blank" rel="noopener noreferrer"{{ end }}>
+                    <img src="{{ $img | relURL }}" alt="{{ .Title }}" class="rounded-xl transition-transform duration-300 hover:scale-[1.02]" />
+                  </a>
+                </div>
+
+                {{ with .Title }}
+                  <div class="w-full mt-3 text-center px-2">
+                    <h3 class="font-medium text-gray-800 dark:text-gray-100 leading-snug text-[13px] sm:text-[14px] line-clamp-2">
+                      {{ . | plainify }}
+                    </h3>
+                  </div>
+                {{ end }}
+              </div>
+
+            {{ end }}
+          </div>
+
+          <!-- Navigasi -->
+          <div class="swiper-button-prev pengumuman-prev opacity-0 group-hover:opacity-100 transition duration-300 !text-blue-700 dark:!text-blue-200 !left-0 !w-8 !h-8 after:!text-sm"></div>
+          <div class="swiper-button-next pengumuman-next opacity-0 group-hover:opacity-100 transition duration-300 !text-blue-700 dark:!text-blue-200 !right-0 !w-8 !h-8 after:!text-sm"></div>
+
+          <!-- Paginasi -->
+          <div class="swiper-pagination pengumuman-pagination mt-6 flex justify-center scale-110"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- =========================================
+     SAMBUTAN KEPALA BIRO
+========================================= -->
+<section class="w-full bg-white dark:bg-gray-800 py-24">
+  <div class="container mx-auto px-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
+
+      {{ $kepalabiro := where .Site.RegularPages "Section" "kepala-biro" }}
+
+      {{ range $kepalabiro }}
+        {{ $img := .Params.thumbnail | default $.Site.Params.no_image }}
+
+        <div class="flex flex-col items-center text-center space-y-3 reveal-left">
+          <div class="relative group">
+            <div class="w-64 md:w-80 lg:w-96 rounded-3xl overflow-hidden shadow-xl border-4 border-white dark:border-blue-700 bg-white dark:bg-blue-900">
+              <img src="{{ $img | absURL }}" 
+                  alt="Kepala Biro"
+                  class="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-300">
+            </div>
+            <div class="absolute inset-0 rounded-3xl ring-4 ring-blue-500/40 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+          </div>
+          <div class="mt-2">
+            <h3 class="text-xl font-bold text-gray-900 dark:text-white">{{ .Site.Params.nama_kepala_biro }}</h3>
+            <p class="text-blue-700 dark:text-blue-300 text-sm font-medium">Kepala Biro Organisasi</p>
+          </div>
+        </div>
+      {{ end }}
+
+      <div class="bg-white/70 dark:bg-blue-950/40 backdrop-blur-md p-7 rounded-3xl shadow-lg border border-white/20 space-y-4 max-w-xl mx-auto reveal-right">
+        <h2 class="text-2xl font-extrabold text-gray-900 dark:text-white">Sambutan Kepala Biro</h2>
+        <p class="text-base text-gray-800 dark:text-gray-100 leading-relaxed">
+          {{ .Site.Params.sambutan_biro1 }}
+        </p>
+        <p class="text-base text-gray-800 dark:text-gray-100 leading-relaxed">
+          {{ .Site.Params.sambutan_biro2 }}
+        </p>
+        <p class="text-base text-gray-800 dark:text-gray-100 leading-relaxed">
+          {{ .Site.Params.sambutan_biro3 }}
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =========================================
+     LAYANAN
+========================================= -->
+<section class="w-full py-24 bg-white dark:bg-gray-800">
+  <div class="container mx-auto px-6">
+    <div class="text-center mb-8 reveal">
+      {{ $frontBundle := .Site.Params.frontBundle | default "layanan" }}
+      {{ $section := .Site.GetPage $frontBundle }}
+      {{ $title := $section.Title | default ($frontBundle | title) }}
+      <h2 class="text-3xl font-extrabold text-black dark:text-white">{{ $title }}</h2>
+      <p class="mt-2 text-base text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+        Layanan biro organisasi yang bertujuan meningkatkan tata kelola pemerintahan yang baik.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 reveal-stagger">
+      {{ range first 8 (where .Site.RegularPages.ByDate.Reverse "Type" $frontBundle) }}
+      <div class="card-float bg-white rounded-2xl p-4 flex flex-col text-center shadow-md">
+        {{ with .Params.thumbnail }}
+        <div class="mb-3">
+          <img src="{{ . }}" alt="{{ $.Title }}" class="w-20 h-20 mx-auto object-contain">
+        </div>
+        {{ end }}
+        <h3 class="text-sm font-bold text-gray-900 mb-2 leading-snug">{{ .Title }}</h3>
+        {{ with .Params.deskripsi }}
+        <p class="text-xs text-gray-700 mb-3 flex-1">{{ . }}</p>
+        {{ end }}
+        <div class="mt-auto">
+          <a href="{{ .RelPermalink }}"
+             class="text-blue-600 text-xs font-semibold flex items-center justify-center gap-1 hover:underline">
+            LIHAT INFORMASI <span>&rarr;</span>
+          </a>
+        </div>
+      </div>
+      {{ end }}
+    </div>
+  </div>
+</section>
+
+<section class="home-compact-section bg-white dark:bg-gray-800">
+  <div class="home-panel bg-white/70 dark:bg-blue-900/60 backdrop-blur-md mx-auto">
+    
+    <div class="home-main-grid grid grid-cols-1 md:grid-cols-12">
+
+      <!-- GALERI FOTO -->
+      <div class="home-gallery-frame col-span-1 md:col-span-6 bg-white dark:bg-blue-800 rounded-2xl shadow-lg p-4 flex flex-col reveal-left">
+        
+        <div class="section-title mb-4">Galeri Foto</div>
+
+        {{ $galeri := where .Site.RegularPages "Section" "galeri" }}
+
+        <div class="swiper mySwiperFoto w-full flex-grow relative group pb-8">
+          <div class="swiper-wrapper">
+
+            {{ range first 8 ($galeri.ByDate.Reverse) }}
+              {{ $img := .Params.thumbnail | default .Site.Params.no_image }}
+
+              <div class="swiper-slide flex flex-col items-center pb-4">
+
+                <!-- BINGKAI TETAP -->
+                <div class="home-photo-frame relative w-full flex items-center justify-center overflow-visible bg-gray-100 dark:bg-gray-800 rounded-xl">
+
+                  <a href="{{ .RelPermalink }}" class="flex items-center justify-center w-full h-full">
+                    <img 
+                      src="{{ $img | relURL }}" 
+                      alt="{{ .Title }}"
+                      class="rounded-xl transition-transform duration-300 hover:scale-[1.02]"
+                      loading="lazy"
+                    />
+                  </a>
+
+                </div>
+
+                <!-- Judul -->
+                <div class="w-full mt-3 text-center px-3">
+                  <h3 class="font-medium text-gray-800 dark:text-gray-100 text-sm line-clamp-2">
+                    {{ .Title }}
+                  </h3>
+                </div>
+
+              </div>
+            {{ end }}
+
+          </div>
+
+          <!-- Navigasi -->
+          <div class="swiper-button-prev foto-prev opacity-0 group-hover:opacity-100 transition duration-300 !text-blue-700 dark:!text-blue-200 !left-0"></div>
+          <div class="swiper-button-next foto-next opacity-0 group-hover:opacity-100 transition duration-300 !text-blue-700 dark:!text-blue-200 !right-0"></div>
+
+          <!-- Pagination -->
+          <div class="swiper-pagination foto-pagination mt-6 flex justify-center scale-110"></div>
+        </div>
+      </div>
+
+      <!-- GALERI VIDEO -->
+      <div class="home-video-frame col-span-1 md:col-span-6 bg-white dark:bg-blue-800 rounded-2xl shadow-lg p-4 flex flex-col reveal-right">
+
+        <div class="section-title mb-4">Galeri Video</div>
+
+        {{ $video := where .Site.RegularPages "Section" "video" }}
+
+        <div class="home-video-grid grid grid-cols-1 md:grid-cols-2 overflow-y-auto flex-1">
+          {{ range first 4 ($video.ByDate.Reverse) }}
+            
+            {{ $eurl := or .Params.src .Params.video .Params.eurl }}
+            {{ $videoID := "" }}
+            
+            {{ $match := findRE "([A-Za-z0-9_-]{11})" $eurl }}
+            {{ if gt (len $match) 0 }}{{ $videoID = index $match 0 }}{{ end }}
+
+            <!-- ITEM VIDEO -->
+            <div class="rounded-xl overflow-hidden aspect-video bg-[#0f172a]">
+              <iframe
+                class="w-full h-full"
+                src="https://www.youtube.com/embed/{{ $videoID }}"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen
+                loading="lazy">
+              </iframe>
+            </div>
+
+          {{ end }}
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- =========================================
+     STYLES UMUM
+========================================= -->
+<style>
+.section-title {
+  background: linear-gradient(90deg, #1d4ed8, #3b82f6);
+  color: #fff;
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+  letter-spacing: .04em;
+  text-align: center;
+  padding: 0.5rem 0.85rem;
+  border-radius: 0.65rem;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.18);
+  margin-bottom: 0.85rem;
+}
+.agenda-card { transition: all 0.3s ease; }
+.agenda-card:hover { transform: translateY(-2px); box-shadow: 0 10px 18px rgba(0,0,0,0.08); }
+.agenda-item { border-left: 4px solid #38b6ff; background: linear-gradient(145deg, #f8fafc, #eef2ff); }
+.dark .agenda-item { background: rgba(30,58,138,.3); border-color: #3b82f6; }
+.nav-btn { background: #e5e7eb; color: #374151; border-radius: 8px; width: 30px; height: 30px; font-weight: bold; transition: .25s; }
+.nav-btn:hover { background: #38b6ff; color: #fff; }
+.active-day { background: #3b82f6; color: #fff; border-radius: 10px; padding: 5px 9px; font-weight: bold; min-width: 112px; }
+
+.swiper-pagination { display:flex !important; justify-content:center; align-items:center; gap:5px; margin-top:0.6rem; }
+.swiper-pagination-bullet { width:8px; height:8px; background:rgba(59,130,246,.4); border-radius:50%; opacity:1; transition:all .3s; }
+.swiper-pagination-bullet-active { background:#3b82f6; transform:scale(1.35); box-shadow:0 0 6px rgba(59,130,246,.5); }
+
+.swiper-button-prev, .swiper-button-next { color:#1d4ed8 !important; transition:all .3s; }
+.swiper-button-prev:hover, .swiper-button-next:hover { color:#2563eb !important; transform:scale(1.1); }
+.dark .swiper-button-prev, .dark .swiper-button-next { color:#93c5fd !important; }
+
+@keyframes fadeIn { from{opacity:0;transform:translateY(5px)} to{opacity:1;transform:translateY(0)} }
+.animate-fadeIn { animation: fadeIn 0.4s ease-in-out; }
+</style>
+
+
+<!-- =========================================
+     SWIPER JS + SCROLL ANIMATION
+========================================= -->
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script>
+// ===== SWIPER BERITA =====
+new Swiper(".mySwiperBerita", {
+  loop: true, spaceBetween: 16,
+  autoplay: { delay: 4000, disableOnInteraction: false },
+  pagination: { el: ".berita-pagination", clickable: true },
+  navigation: { nextEl: ".berita-next", prevEl: ".berita-prev" },
+});
+
+// ===== SWIPER INFOGRAFIS =====
+new Swiper(".mySwiperInfografis", {
+  loop: true, spaceBetween: 16,
+  autoplay: { delay: 4500, disableOnInteraction: false },
+  pagination: { el: ".infografis-pagination", clickable: true },
+  navigation: { nextEl: ".infografis-next", prevEl: ".infografis-prev" },
+});
+
+// ===== SWIPER PENGUMUMAN =====
+new Swiper(".mySwiperPengumuman", {
+  slidesPerView: 1, spaceBetween: 16, loop: true,
+  autoplay: { delay: 4000, disableOnInteraction: false },
+  pagination: { el: ".pengumuman-pagination", clickable: true },
+  navigation: { nextEl: ".pengumuman-next", prevEl: ".pengumuman-prev" },
+});
+
+// ===== SWIPER FOTO — fixed height via CSS =====
+new Swiper(".mySwiperFoto", {
+  loop: true, spaceBetween: 16,
+  autoplay: { delay: 3500, disableOnInteraction: false },
+  pagination: { el: ".foto-pagination", clickable: true },
+  navigation: { nextEl: ".foto-next", prevEl: ".foto-prev" },
+});
+
+// ===== AGENDA HARIAN =====
+document.addEventListener("DOMContentLoaded", function () {
+  const prevBtn        = document.getElementById("prevDay");
+  const nextBtn        = document.getElementById("nextDay");
+  const currentDateEl  = document.getElementById("currentDate");
+  const agendaListEl   = document.getElementById("agendaList");
+
+  const agendas = [
+    {{- $agenda := .Site.Params.agenda -}}
+    {{- $lastIndex := sub (len $agenda) 1 -}}
+    {{- range $i, $a := $agenda -}}
+    {
+      judul:      "{{ $a.judul | safeJS }}",
+      hari:       "{{ $a.hari }}",
+      jamMulai:   "{{ $a.jamMulai | default "" }}",
+      jamSelesai: "{{ $a.jamSelesai | default "" }}",
+      lokasi:     "{{ $a.lokasi | default "-" | safeJS }}"
+    }{{ if lt $i $lastIndex }},{{ end }}
+    {{- end -}}
+  ];
+
+  function formatDate(d) {
+    return d.toLocaleDateString("id-ID", { weekday: "short", day: "2-digit", month: "short", year: "numeric" });
+  }
+
+  let currentDate = new Date();
+
+  function renderAgenda(date) {
+    const dateStr = date.toISOString().split("T")[0];
+    currentDateEl.textContent = formatDate(date);
+    const found = agendas.filter(a => a.hari === dateStr);
+    agendaListEl.innerHTML = "";
+
+    if (found.length > 0) {
+      found.forEach(a => {
+        agendaListEl.innerHTML += `
+          <div class="agenda-item home-agenda-item bg-blue-50 dark:bg-blue-900/30 text-left shadow-sm hover:shadow-md transition-all duration-200 mb-2">
+            <h4 class="font-semibold text-blue-700 dark:text-blue-200 text-sm mb-2">📌 ${a.judul}</h4>
+            <ul class="text-xs text-gray-700 dark:text-gray-300 space-y-1 ml-1">
+              <li>🗓️ <strong>Tanggal:</strong> ${new Date(a.hari).toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" })}</li>
+              <li>⏰ <strong>Waktu:</strong> ${a.jamMulai || "-"} ${a.jamSelesai ? "– " + a.jamSelesai : ""}</li>
+              <li>📍 <strong>Tempat:</strong> ${a.lokasi}</li>
+            </ul>
+          </div>`;
+      });
+    } else {
+      agendaListEl.innerHTML = `
+        <div class="flex flex-col items-center text-center mt-4 animate-fadeIn">
+          <img src="/images/pngwing.com.png" class="w-14 h-14 mb-2 opacity-80">
+          <p class="font-semibold text-blue-900 text-sm">Tidak ada kegiatan hari ini</p>
+          <p class="text-gray-600 text-xs mt-1">Cek tanggal lain.</p>
+        </div>`;
+    }
+  }
+
+  prevBtn.addEventListener("click", () => { currentDate.setDate(currentDate.getDate() - 1); renderAgenda(currentDate); });
+  nextBtn.addEventListener("click", () => { currentDate.setDate(currentDate.getDate() + 1); renderAgenda(currentDate); });
+  renderAgenda(currentDate);
+});
+
+
+// ===== SCROLL REVEAL — DUA ARAH (naik & turun) =====
+(function () {
+  // Kumpulkan semua elemen yang perlu dianimasikan
+  const selectors = '.reveal, .reveal-left, .reveal-right, .reveal-scale, .reveal-stagger';
+  const els = document.querySelectorAll(selectors);
+  if (!els.length) return;
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        // Masuk viewport → tampilkan
+        entry.target.classList.add('visible');
+      } else {
+        // Keluar viewport → sembunyikan lagi (agar animasi ulang saat scroll balik)
+        entry.target.classList.remove('visible');
+      }
+    });
+  }, {
+    threshold: 0.10,
+    rootMargin: '0px 0px -30px 0px'
+  });
+
+  els.forEach(el => observer.observe(el));
+})();
+</script>
+
+
+{{- partial "intro.html" . -}}
+{{ end }}

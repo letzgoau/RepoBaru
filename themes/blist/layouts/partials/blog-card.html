@@ -1,0 +1,70 @@
+{{ $accent := .Site.Params.ascentColor }}
+
+<div class="flex flex-wrap justify-center gap-6 w-full px-4 py-4">
+
+  <div
+    class="group relative bg-white dark:bg-gray-800 rounded-2xl shadow-md overflow-hidden transition-all duration-500 hover:-translate-y-1 hover:shadow-lg hover:bg-blue-800 dark:hover:bg-blue-700 hover:text-white w-full sm:w-[45%] lg:w-[42%] p-3 text-center">
+
+    <a href="{{ .RelPermalink }}" class="block">
+
+      <!-- Thumbnail -->
+      {{ if .Params.thumbnail }}
+      <div class="relative w-full overflow-hidden rounded-lg mb-3 mx-auto bg-gray-100 dark:bg-gray-700" style="height: 190px;">
+        <img
+          src="{{ .Params.thumbnail }}"
+          alt="{{ .Params.title }}"
+          class="w-full h-full object-contain transition-transform duration-500 group-hover:scale-105" />
+      </div>
+      {{ end }}
+
+      <!-- Judul -->
+      <h3
+        class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-1 transition-colors duration-500 group-hover:text-white line-clamp-2 leading-snug">
+        {{ .Params.title }}
+      </h3>
+
+      <!-- Translasi -->
+      {{ if not (or (or .Site.Params.hideOtherLanguages .Params.hideOtherLanguages) false) }}
+        {{ if .IsTranslated }}
+        <p
+          class="italic text-xs text-black dark:text-w transition duration-500 group-hover:text-gray-200 line-clamp-1 mt-1">
+          {{- $sortedTranslations := sort .Translations "Site.Language.Weight" -}}
+          {{- $links := apply $sortedTranslations "partial" "translation_link.html" "." -}}
+          {{- $cleanLinks := apply $links "chomp" "." -}}
+          {{- $linksOutput := delimit $cleanLinks (i18n "translationsSeparator") -}}
+          {{ i18n "translationsLabel" }}{{ $linksOutput }}
+        </p>
+        {{ end }}
+      {{ end }}
+
+    </a>
+  </div>
+
+</div>
+
+<style>
+  /* Batasi tinggi teks agar tetap rapi */
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .line-clamp-1 {
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* Responsif */
+  @media (max-width: 768px) {
+    .group {
+      width: 90% !important;
+    }
+    .group div[style] {
+      height: 160px !important; /* gambar sedikit lebih kecil di mobile */
+    }
+  }
+</style>

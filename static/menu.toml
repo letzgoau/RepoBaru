@@ -1,0 +1,241 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[[languages.id.menu.main]]
+identifier = 'berita'
+name = "BERITA"
+url = "/berita"
+weight = 2
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[[languages.id.menu.main]]
+identifier = 'laporan inventaris barang milik negara (aset)'
+name = "Laporan Inventaris Barang Milik Negara (Aset)"
+parent = "laporan"
+url = "/laporan"
+weight = 1
+
+
+
+[[languages.id.menu.main]]
+identifier = 'tentang kami'
+name = "TENTANG KAMI"
+url = ""
+weight = 1
+
+
+
+[[languages.id.menu.main]]
+identifier = 'visi dan misi'
+name = "VISI DAN MISI"
+parent = "tentang kami"
+url = "/visi dan misi"
+weight = 1
+
+
+
+[[languages.id.menu.main]]
+identifier = 'tugas pokok dan fungsi'
+name = "TUGAS POKOK DAN FUNGSI"
+parent = "tentang kami"
+url = "/tugas pokok dan fungsi"
+weight = 2
+
+
+
+[[languages.id.menu.main]]
+identifier = 'maklumat pelayanan'
+name = "MAKLUMAT PELAYANAN"
+parent = "tentang kami"
+url = "/maklumat pelayanan"
+weight = 3
+
+
+
+[[languages.id.menu.main]]
+identifier = 'struktur organisasi'
+name = "STRUKTUR ORGANISASI"
+parent = "tentang kami"
+url = "/struktur organisasi"
+weight = 4
+
+
+
+[[languages.id.menu.main]]
+identifier = 'profil pimpinan'
+name = "PROFIL PIMPINAN"
+parent = "tentang kami"
+url = "/profil pimpinan"
+weight = 5
+
+
+
+[[languages.id.menu.main]]
+identifier = 'layanan dan publikasi'
+name = "LAYANAN DAN PUBLIKASI"
+url = ""
+weight = 3
+
+
+
+[[languages.id.menu.main]]
+identifier = 'data dan dokumen'
+name = "DATA DAN DOKUMEN"
+parent = "layanan dan publikasi"
+url = "/data dan dokumen"
+weight = 1
+
+
+
+
+
+[[languages.id.menu.main]]
+identifier = 'jenis layanan'
+name = "JENIS LAYANAN"
+parent = "layanan dan publikasi"
+url = "/jenis layanan"
+weight = 3
+
+
+
+[[languages.id.menu.main]]
+identifier = 'layanan'
+name = "LAYANAN"
+parent = "layanan dan publikasi"
+url = "/layanan"
+weight = 4
+
+
+
+[[languages.id.menu.main]]
+identifier = 'laporan'
+name = "LAPORAN"
+parent = "layanan dan publikasi"
+url = "/laporan"
+weight = 2
+
+
+
+[[languages.id.menu.main]]
+identifier = 'link terkait'
+name = "LINK TERKAIT"
+url = ""
+weight = 4
+
+
+
+
+
+[[languages.id.menu.main]]
+identifier = 'lapor!'
+name = "LAPOR!"
+parent = "link terkait"
+url = "https://www.lapor.go.id/"
+weight = 3
+
+
+
+[[languages.id.menu.main]]
+identifier = 'sekam padi'
+name = "SEKAM PADI"
+parent = "link terkait"
+url = "https://sekampadi.kalbarprov.go.id/"
+weight = 1
+
+
+
+[[languages.id.menu.main]]
+identifier = 'sim-dbase opda'
+name = "SIM-DBASE OPDA"
+parent = "link terkait"
+url = "https://organisasi.kalbarprov.go.id/"
+weight = 2
+
+
+
+[[languages.id.menu.main]]
+identifier = 'e-sakip'
+name = "E-SAKIP"
+parent = "link terkait"
+url = "https://esakip.kalbarprov.go.id/"
+weight = 3
+
+
+
+[[languages.id.menu.main]]
+identifier = 'ppid'
+name = "PPID"
+url = ""
+weight = 5
+
+
+
+
+
+
+
+
+
+[[languages.id.menu.main]]
+identifier = 'profil ppid'
+name = "PROFIL PPID"
+parent = "ppid"
+url = "/profil ppid"
+weight = 1
+
+
+
+[[languages.id.menu.main]]
+identifier = 'tata cara'
+name = "TATA CARA"
+parent = "ppid"
+url = "/tata cara"
+weight = 2
+
+
+
+[[languages.id.menu.main]]
+identifier = 'sippn-cariyanlik'
+name = "SIPPN-cariyanlik"
+parent = "link terkait"
+url = "https://sippn.menpan.go.id/instansi/147442/pemerintah-provinsi-kalimantan-barat/biro-organisasi"
+weight = 5
+

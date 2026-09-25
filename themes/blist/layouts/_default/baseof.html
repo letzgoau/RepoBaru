@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="{{ .Lang }}" itemscope itemtype="http://schema.org/WebPage">
+  {{- partial "head.html" . -}}
+  <body class="dark:text-black">
+    
+    <script src="https://code.responsivevoice.org/responsivevoice.js?key=przYp5x6"></script>
+    
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    
+    <style type="text/css">
+      .greyscaleall { filter: grayscale(100%); }
+      .btn-container { margin-bottom: 10px; text-align: center; }
+      .mycheckbox { font-size: 12px; color: #000; font-weight: 500; }
+      .btn-color-mode-switch { display: inline-block; margin: 0; position: relative; }
+      .btn-color-mode-switch > label.btn-color-mode-switch-inner { margin: 0; width: 170px; height: 26px; background: #e0e0e0; border-radius: 26px; overflow: hidden; position: relative; transition: .3s; display: block; }
+      .btn-color-mode-switch > label.btn-color-mode-switch-inner:before { content: attr(data-on); cursor: pointer; position: absolute; font-size: 12px; font-weight: 700; top: 2px; right: 25px; margin-bottom: 5px; }
+      .btn-color-mode-switch > label.btn-color-mode-switch-inner:after { content: attr(data-off); cursor: pointer; width: 85px; height: 22px; font-size: 12px; background: #fff; border-radius: 26px; position: absolute; left: 2px; top: 2px; font-weight: 700; text-align: center; transition: .3s; box-shadow: 0 0 6px -2px #111; padding: 2px 0; margin-bottom: 10px; }
+      .btn-color-mode-switch input[type=checkbox] { cursor: pointer; width: 70px; height: 25px; opacity: 0; position: absolute; top: 0; z-index: 1; padding: 2px 0; margin: 0; }
+      .btn-color-mode-switch input[type=checkbox]:checked + label.btn-color-mode-switch-inner { background: #e0e0e0; color: #000; font-weight: 700; font-size: 12px; }
+      .btn-color-mode-switch input[type=checkbox]:checked + label.btn-color-mode-switch-inner:after { content: attr(data-on); left: 83px; background: #fff; font-weight: 700; font-size: 12px; }
+      .btn-color-mode-switch input[type=checkbox]:checked + label.btn-color-mode-switch-inner:before { content: attr(data-off); right: auto; left: 15px; color: #000; font-weight: 700; font-size: 12px; }
+      .toolbar-disabilitas { position: fixed; top: 35%; left: 0; z-index: 999; height: 1px; width: -180px; text-align: center; background: 0 0 !important; }
+      .open-toolbar { margin-top: 10%; padding: 8px 5px 3px; height: 50px; border: none; width: 50px; background: #00aa48; }
+      .toolbar-disabilitas .groupcontenttoolbar { transform: translateX(-180px); transition: transform .6s; display: flex; flex-direction: row; height: 1px; background-color: transparent !important; }
+      .toolbar-disabilitas.show-toolbar .groupcontenttoolbar { transform: translateX(0); }
+      .contenttoolbar_disabilitas { margin-top: 10%; padding-top: 15px; display: flex; flex-direction: column; height: max-content; border: 1px solid #000; box-shadow: 0 10px 10px rgb(0 0 0 / .2); background-color: #fff; width: 180px; word-break: break-all; overflow: hidden; }
+      .titletools { font-size: 13px !important; font-weight: 700; margin-bottom: 10px; padding-left: 5px; padding-right: 5px; color: #000; }
+      .bodytools { left: 0; height: max-content; width: 100%; margin-bottom: 10px; }
+      .subtitletools, .subtitletoolsactive { font-size: 12px !important; margin-bottom: 5px; cursor: pointer; left: 0; text-align: left; padding-left: 10px; }
+      .subtitletools { font-family: Arial, Helvetica, sans-serif; color: #000; }
+      .subtitletoolsactive { background-color: #000 !important; padding-top: 5px; padding-bottom: 5px; color: #fff; font-weight: 700; }
+      .subtitletools:active, .subtitletools:focus, .subtitletools:hover { background-color: #000; color: #fff; font-weight: 700; font-size: 12; max-width: 100%; padding-top: 5px; padding-left: 10px; padding-bottom: 5px; }
+      .flexrowdata { display: flex; flex-direction: row; height: auto; width: auto; }
+      
+      body .uwy.userway_p1 .userway_buttons_wrapper { top: 11%; left: calc(100vw - 30px); }
+      body .uwy.userway_p7 .userway_buttons_wrapper { top: 11%; left: 15px; }
+      
+      @media only screen and (max-width: 900px) {
+        .toolbar-disabilitas { top: 60%; left: 0; z-index: 999; }
+      }
+.greyscaleall { filter: grayscale(100%); }
+      .btn-container { margin-bottom: 10px; text-align: center; }
+      
+      /* --- Toolbar Sosmed --- */
+      .toolbar-sosmed { position: fixed; top: 35%; right: 0; z-index: 9999; display: flex; flex-direction: column; }
+      .toolbar-sosmed .sosmed-btn { display: flex; align-items: center; justify-content: center; width: 50px; height: 50px; margin: 5px 0; color: #fff; font-size: 20px; border-radius: 8px 0 0 8px; transition: all 0.3s ease; text-decoration: none; }
+      .toolbar-sosmed .sosmed-btn:hover { transform: translateX(-5px); filter: brightness(0.9); }
+      .toolbar-sosmed .youtube { background: #FF0000; }
+      .toolbar-sosmed .instagram { background: #E4405F; }
+      .toolbar-sosmed .facebook { background: #1877F2; }
+      .toolbar-sosmed .whatsapp { background: #25D366; }
+
+      /* --- Toolbar Kritik (Pindah ke Kanan) --- */
+      .toolbar-kritik { position: fixed; top: 25%; right: 0; z-index: 9999; display: flex; flex-direction: column; align-items: center; }
+      .toolbar-kritik button { background-color: #1e88e5; color: white; border: none; width: 50px; height: 50px; border-radius: 8px 0 0 8px; cursor: pointer; transition: all 0.3s ease; box-shadow: -3px 3px 6px rgba(0, 0, 0, 0.2); font-size: 20px; }
+      .toolbar-kritik button:hover { transform: translateX(-5px); filter: brightness(1.1); }
+
+      /* --- Panel Kritik (Muncul dari Kanan) --- */
+      .kritik-form-panel {
+        position: fixed;
+        right: 0; /* Ubah dari left ke right */
+        bottom: 30px;
+        transform: translateX(110%); /* Sembunyi ke arah kanan */
+        width: 350px;
+        max-width: 90%;
+        background: #ffffff;
+        border-radius: 16px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        padding: 25px 20px;
+        z-index: 10000;
+        font-family: "Inter", "Segoe UI", sans-serif;
+        transition: transform 0.4s ease;
+        border: 1px solid #e0e6ed;
+      }
+
+      .kritik-form-panel.active {
+        transform: translateX(-20px); /* Geser masuk ke arah kiri */
+      }
+
+      .close-btn { position: absolute; top: 10px; right: 15px; background: none; border: none; font-size: 24px; cursor: pointer; color: #64748b; }
+
+      /* Form Styling */
+      .form-group { margin-bottom: 14px; }
+      .input-wrapper { position: relative; }
+      .input-wrapper i { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #94a3b8; }
+      input[type="text"], input[type="email"], textarea { width: 100%; padding: 12px 12px 12px 38px; border: 2px solid #f1f5f9; border-radius: 10px; background-color: #f8fafc; font-size: 14px; transition: all 0.25s ease; box-sizing: border-box; }
+      input:focus, textarea:focus { border-color: #3b82f6; background-color: #fff; outline: none; }
+      
+      .radio-group { display: flex; gap: 8px; }
+      .radio-group label { flex: 1; text-align: center; padding: 10px; border-radius: 10px; border: 1px solid #e2e8f0; font-size: 13px; cursor: pointer; transition: 0.25s; }
+      .radio-group input { display: none; }
+      .radio-group label:has(input:checked) { border-color: #3b82f6; background: #eff6ff; font-weight: 600; }
+
+      .submit-btn { width: 100%; padding: 12px; margin-top: 10px; border: none; border-radius: 10px; color: #fff; font-weight: 600; cursor: pointer; background: linear-gradient(135deg, #3b82f6, #1e40af); transition: 0.25s; }
+      .submit-btn:hover { transform: translateY(-2px); filter: brightness(1.1); }
+
+      .toast { position: fixed; bottom: 20px; right: 20px; color: #fff; padding: 12px 18px; border-radius: 8px; opacity: 0; transition: 0.3s; z-index: 10001; }
+      .toast.show { opacity: 1; }
+      .toast.success { background: #16a34a; }
+      .toast.error { background: #dc2626; }
+
+      @media (max-width: 480px) {
+        .kritik-form-panel { width: 90%; right: 5%; transform: translateY(120%); bottom: 0; }
+        .kritik-form-panel.active { transform: translateY(-10px); }
+      }
+    </style>
+
+    <span id="loadmodaldisabilitas"></span>
+
+    <div class="toolbar-kritik">
+      <button id="btnKritik" title="Kritik & Saran">
+        <i class="fa fa-comment-dots"></i>
+      </button>
+    </div>
+
+    <div id="kritikPanel" class="kritik-form-panel">
+      <button class="close-btn" id="closeKritik">&times;</button>
+
+  <form id="formPenilaian">
+  <div class="form-group">
+    <label>Nama Lengkap</label>
+    <div class="input-wrapper">
+      <i class="fas fa-user"></i>
+      <input type="text" name="nama" placeholder="Contoh: Andi Wijaya" required>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label>Email</label>
+    <div class="input-wrapper">
+      <i class="fas fa-envelope"></i>
+      <input type="email" name="email" placeholder="andi@email.com" required>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label>No. Handphone</label>
+    <div class="input-wrapper">
+      <i class="fas fa-phone"></i>
+      <input type="text" name="hp" placeholder="08123456789" required>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label>Bagaimana Layanan Kami?</label>
+    <div class="radio-group">
+      <label>
+        <input type="radio" name="penilaian" value="buruk" required>
+        <span>😞</span><br>
+        <span>Buruk</span>
+      </label>
+      <label>
+        <input type="radio" name="penilaian" value="puas">
+        <span>😊</span><br>
+        <span>Puas</span>
+      </label>
+      <label>
+        <input type="radio" name="penilaian" value="hebat">
+        <span>🤩</span><br>
+        <span>Hebat</span>
+      </label>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label>Kritik & Saran</label>
+    <div class="input-wrapper">
+      <i class="fas fa-pen-nib"></i>
+      <textarea name="pesan" rows="3" placeholder="Tuliskan pesan Anda..." required></textarea>
+    </div>
+  </div>
+
+  <button type="submit" class="submit-btn">
+    <span>Kirim Sekarang</span>
+    <i class="fas fa-paper-plane"></i>
+  </button>
+</form>
+    </div>
+
+    <div id="loading-screen" class="fixed inset-0 bg-white opacity-100 z-50 flex justify-center items-center">
+      <div class="loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-12 w-12 mb-4"></div>
+    </div>
+
+    {{- partial "header.html" . -}}
+    <main class="flex-1 main-content" style="background-color:white; min-height: 61vh;">
+      {{- block "main" . }}{{- end }}
+    </main>
+    {{- partial "footer.html" . -}}
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <div class="toolbar-sosmed">
+      {{- range .Site.Params.homepage.social.icons }}
+        <a href="{{ .url }}" target="_blank" rel="noopener" class="sosmed-btn {{ .website }}">
+          {{ if eq .website "youtube" }}<i class="fab fa-youtube"></i>{{ end }}
+          {{ if eq .website "instagram" }}<i class="fab fa-instagram"></i>{{ end }}
+          {{ if eq .website "facebook" }}<i class="fab fa-facebook-f"></i>{{ end }}
+          {{ if eq .website "whatsapp" }}<i class="fab fa-whatsapp"></i>{{ end }}
+        </a>
+      {{- end }}
+    </div>
+
+  </body>
+  
+  <script src='{{"js/loadmodaldisabilitas.js" | relURL}}'></script>
+  
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+  const panel = document.getElementById("kritikPanel");
+  const btnKritik = document.getElementById("btnKritik");
+  const btnClose = document.getElementById("closeKritik");
+  const form = document.getElementById("formPenilaian");
+  const btn = form.querySelector("button[type='submit']");
+
+  // Toggle panel
+  btnKritik.addEventListener("click", () => {
+    panel.classList.toggle("active");
+  });
+
+  // Close
+  btnClose.addEventListener("click", () => {
+    panel.classList.remove("active");
+  });
+
+  // Klik luar
+  document.addEventListener("click", (e) => {
+    if (!panel.contains(e.target) && !btnKritik.contains(e.target)) {
+      panel.classList.remove("active");
+    }
+  });
+
+  // Submit
+  form.addEventListener("submit", async function (e) {
+    e.preventDefault();
+
+    const originalText = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = "Mengirim...";
+
+    try {
+      const res = await fetch("https://formspree.io/f/xojrwped", {
+        method: "POST",
+        body: new FormData(form),
+        headers: { Accept: "application/json" }
+      });
+
+      if (res.ok) {
+        showToast("Berhasil dikirim!", "success");
+        form.reset();
+        panel.classList.remove("active");
+      } else {
+        showToast("Gagal mengirim", "error");
+      }
+
+    } catch (err) {
+      showToast("Error koneksi", "error");
+    }
+
+    btn.disabled = false;
+    btn.innerHTML = originalText;
+  });
+
+  function showToast(msg, type) {
+    const toast = document.createElement("div");
+    toast.className = "toast " + type;
+    toast.innerText = msg;
+    document.body.appendChild(toast);
+
+    setTimeout(() => toast.classList.add("show"), 100);
+    setTimeout(() => toast.remove(), 3000);
+  }
+
+});
+</script>
+</html>
